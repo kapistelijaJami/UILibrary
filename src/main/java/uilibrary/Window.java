@@ -58,7 +58,7 @@ public class Window extends JFrame {
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//ikkuna sulkeutuu rastista
 		//super.setResizable(false);							//ikkunaa ei voi venyttää
 		super.add(canvas);										//lisätään peli ikkunaan
-		super.pack();											//tehdään JFrame Windowista halutun kokoinen
+		super.pack();											//tehdään JFrame windowista halutun kokoinen
 		super.setLocationRelativeTo(null);						//ikkuna syntyy näytön keskelle
 		super.setVisible(true);									//laitetaan ikkuna näkyväksi
 		

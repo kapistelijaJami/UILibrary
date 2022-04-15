@@ -3,17 +3,36 @@ package uilibrary;
 import uilibrary.enums.DividerOrientation;
 import uilibrary.enums.DividerOrientation.ScalingDirection;
 
-public interface Panel {
-	public int getWidth();
-	public int getHeight();
-	public int getX();
-	public int getY();
-	public void setX(int x);
-	public void setY(int y);
-	public void setWidth(int width);
-	public void setHeight(int height);
+public abstract class Panel {
+	protected int x, y;
+	protected int width, height;
 	
-	public default int getSpace(DividerOrientation dir) {
+	public int getWidth() {
+		return width;
+	}
+	public int getHeight() {
+		return height;
+	}
+	public int getX() {
+		return x;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public void setY(int y) {
+		this.y = y;
+	}
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	
+	public int getSpace(DividerOrientation dir) {
 		switch (dir) {
 			case HORIZONTAL:
 				return getHeight();
@@ -24,7 +43,7 @@ public interface Panel {
 		return 0;
 	}
 	
-	public default void setSpace(int val, ScalingDirection dir) {
+	public void setSpace(int val, ScalingDirection dir) {
 		switch (dir) {
 			case TOP:
 				int diff = getHeight() - val;

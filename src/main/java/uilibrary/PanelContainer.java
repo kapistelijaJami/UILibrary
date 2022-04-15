@@ -3,7 +3,7 @@ package uilibrary;
 import static uilibrary.PanelContainer.ContainerType.DIVIDER;
 import static uilibrary.PanelContainer.ContainerType.PANEL;
 
-public class PanelContainer implements Panel {
+public class PanelContainer extends Panel {
 	public enum ContainerType {
 		PANEL, DIVIDER;
 	}

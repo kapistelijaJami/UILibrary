@@ -7,10 +7,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import uilibrary.menu.HelperFunctions;
 
 //Tee tähän viel sillei, että pystyy pilkkoo useamminkin, ja sillon jos dividerin toisella puolella on 2 panelia, niin ottaa varmaan toiseksi sen niiden dividerin
 public class Divider {
-	private int value; //actual vertical/horizontal distance from top
+	private int value; //actual vertical/horizontal distance from top/left
 	private int length; //how long the divider is
 	private int thickness; //how thick it is for mouse to grab onto
 	private int minSpace; //how much space both panels have to have minimum.
@@ -75,9 +76,7 @@ public class Divider {
 	}
 	
 	public void updateValue(int newVal) {
-		newVal = Math.max(0 + minSpace, Math.min(getTotalSpace() - minSpace, newVal));
-		
-		value = newVal;
+		value = HelperFunctions.clamp(newVal, minSpace, getTotalSpace() - minSpace);
 		changePosition();
 	}
 	
@@ -85,6 +84,20 @@ public class Divider {
 		int totalSpace = getTotalSpace(); //have to take it into a variable, because the first method call already changes this result, and I need it in the second one.
 		first.setSpace(value, dir.getFirst());
 		second.setSpace(totalSpace - value, dir.getSecond());
+		updateSecondLocation();
+	}
+	
+	private void updateSecondLocation() {
+		switch (dir) {
+			case HORIZONTAL:
+				second.setX(first.getX());
+				second.setY(value);
+				break;
+			case VERTICAL:
+				second.setX(value);
+				second.setY(first.getY());
+				break;
+		}
 	}
 	
 	public int getTotalSpace() {
