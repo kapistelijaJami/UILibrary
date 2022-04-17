@@ -1,5 +1,6 @@
 package uilibrary;
 
+import uilibrary.enums.Alignment;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -15,11 +16,13 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+
+/**
+ * If you need font metrics without graphics, you could do:
+ * Canvas c = new Canvas();
+ * FontMetrics fm = c.getFontMetrics(font);
+ */
 public class RenderText {
-	public enum Alignment {
-		TOP, CENTER, LEFT, RIGHT, BOTTOM;
-	}
-	
 	public static Font defaultFont = new Font("Serif", Font.BOLD, 25);
 	
 	protected static Font checkIfFontIsNull(Font font) {
@@ -103,6 +106,10 @@ public class RenderText {
 	//MAIN function
 	public static Rectangle drawStringWithAlignment(Graphics2D g, String text, Rectangle rect, Font font, Alignment... aligns) {
 		font = checkIfFontIsNull(font);
+		
+		AffineTransform old = g.getTransform();
+		g.setTransform(new AffineTransform()); //This is here to get the metrics correct while at is rotated.
+		
 		FontMetrics metrics = g.getFontMetrics(font);
 		int width = metrics.stringWidth(text);
 		int height = getFontHeight(g, font);
@@ -127,6 +134,8 @@ public class RenderText {
 					break;
 			}
 		}
+		
+		g.setTransform(old);
 		
 		g.setFont(font);
 		g.drawString(text, x, y);

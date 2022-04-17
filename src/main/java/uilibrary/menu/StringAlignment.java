@@ -1,7 +1,7 @@
 package uilibrary.menu;
 
-import uilibrary.RenderText.Alignment;
-import static uilibrary.RenderText.Alignment.CENTER;
+import uilibrary.enums.Alignment;
+import static uilibrary.enums.Alignment.CENTER;
 import java.awt.Color;
 
 import java.awt.Font;

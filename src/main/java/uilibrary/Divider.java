@@ -9,12 +9,12 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import uilibrary.menu.HelperFunctions;
 
-//Tee tähän viel sillei, että pystyy pilkkoo useamminkin, ja sillon jos dividerin toisella puolella on 2 panelia, niin ottaa varmaan toiseksi sen niiden dividerin
-public class Divider {
-	private int value; //actual vertical/horizontal distance from top/left
-	private int length; //how long the divider is
-	private int thickness; //how thick it is for mouse to grab onto
-	private int minSpace; //how much space both panels have to have minimum.
+//Tee tähän viel sillei, että pystyy pilkkoo useamminkin samaan suuntaan
+public class Divider extends Panel {
+	private int value;		//actual vertical/horizontal distance from top/left
+	private int length;		//how long the divider is
+	private int thickness;	//how thick it is for mouse to grab onto
+	private int minSpace;	//how much space both panels have to have minimum.
 	private int maxSpace;
 	
 	public DividerOrientation dir;
@@ -27,9 +27,11 @@ public class Divider {
 	
 	private boolean movable = true;
 	
-	private PanelContainer first, second; //panels that this scales and is in between at.
+	private Panel first, second; //panels that this scales and is in between at.
 	
-	public Divider(int value, int thickness, int minSpace, PanelContainer first, PanelContainer second, DividerOrientation dir) {
+	public Divider(int value, int thickness, int minSpace, Panel first, Panel second, DividerOrientation dir) {
+		super(0, 0);
+		
 		this.value = value;
 		this.thickness = thickness;
 		this.minSpace = minSpace;
@@ -57,6 +59,7 @@ public class Divider {
 		movable = b;
 	}
 	
+	@Override
 	public void update() {
 		if (dragging || valueChanged) {
 			calculateNewValueFromCoordinates(lastMouseLocation.x, lastMouseLocation.y);
@@ -69,6 +72,7 @@ public class Divider {
 		}
 	}
 	
+	@Override
 	public void render(Graphics2D g) {
 		g.setColor(Color.BLACK);
 		Rectangle rect = getHitbox();
@@ -87,7 +91,7 @@ public class Divider {
 		updateSecondLocation();
 	}
 	
-	private void updateSecondLocation() {
+	private void updateSecondLocation() { //this is here so you don't manually have to calculate the location for the second panel
 		switch (dir) {
 			case HORIZONTAL:
 				second.setX(first.getX());
@@ -104,16 +108,15 @@ public class Divider {
 		return first.getSpace(dir) + second.getSpace(dir);
 	}
 	
-	public int getX() {
+	public int getDividerX() {
 		return this.first.getX() + value - thickness / 2;
 	}
 	
-	public int getY() {
+	public int getDividerY() {
 		return this.first.getY() + value - thickness / 2;
 	}
 	
 	public void setLength(int length, boolean instantUpdate) {
-		//System.out.println("dividerLengthSet: " + length);
 		this.length = length;
 		if (instantUpdate) {
 			updateLength();
@@ -272,10 +275,45 @@ public class Divider {
 		return length;
 	}
 
-	public PanelContainer getFirst() {
+	public Panel getFirst() {
 		return first;
 	}
-
+	
+	@Override
+	public int getWidth() {
+		switch (dir) {
+			case HORIZONTAL:
+				return getLength();
+			case VERTICAL:
+				return getTotalSpace();
+		}
+		
+		return 0;
+	}
+	
+	@Override
+	public int getHeight() {
+		switch (dir) {
+			case HORIZONTAL:
+				return getTotalSpace();
+			case VERTICAL:
+				return getLength();
+		}
+		
+		return 0;
+	}
+	
+	@Override
+	public int getX() {
+		return first.getX();
+	}
+	
+	@Override
+	public int getY() {
+		return first.getY();
+	}
+	
+	@Override
 	public void setX(int x) {
 		switch (dir) {
 			case HORIZONTAL:
@@ -288,6 +326,7 @@ public class Divider {
 		}
 	}
 
+	@Override
 	public void setY(int y) {
 		switch (dir) {
 			case HORIZONTAL:
@@ -296,6 +335,30 @@ public class Divider {
 			case VERTICAL:
 				first.setY(y);
 				second.setY(y);
+				break;
+		}
+	}
+	
+	@Override
+	public void setWidth(int width) {
+		switch (dir) {
+			case HORIZONTAL:
+				setLength(width, true);
+				break;
+			case VERTICAL:
+				setMaxSpace(width, true);
+				break;
+		}
+	}
+	
+	@Override
+	public void setHeight(int height) {
+		switch (dir) {
+			case HORIZONTAL:
+				setMaxSpace(height, true);
+				break;
+			case VERTICAL:
+				setLength(height, true);
 				break;
 		}
 	}

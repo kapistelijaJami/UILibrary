@@ -1,5 +1,7 @@
 package uilibrary;
 
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import uilibrary.enums.DividerOrientation;
 import uilibrary.enums.DividerOrientation.ScalingDirection;
 
@@ -7,6 +9,18 @@ public abstract class Panel {
 	protected int x, y;
 	protected int width, height;
 	
+	public Panel(int width, int height) {
+		this(0, 0, width, height);
+	}
+	
+	public Panel(int x, int y, int width, int height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+	
+	//override these when implementation differs
 	public int getWidth() {
 		return width;
 	}
@@ -31,6 +45,12 @@ public abstract class Panel {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+	public Rectangle getBounds() {
+		return new Rectangle(x, y, width, height);
+	}
+	
+	public void update() {}
+	public abstract void render(Graphics2D g);
 	
 	public int getSpace(DividerOrientation dir) {
 		switch (dir) {

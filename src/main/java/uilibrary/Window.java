@@ -7,36 +7,80 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
+import java.awt.Label;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
+/**
+ * Basic window with a canvas where you can draw with Graphics2D object.
+ * Ask for graphics2D with getGraphics2D() method, then render, and finally call display(g).
+ */
 public class Window extends JFrame {
 	private Canvas canvas;
+	private boolean fullscreen;
 	
 	public Window(int width, int height, String title) {
-		this(width, height, title, 0, false);
+		this(width, height, title, true, 0, false);
+	}
+	
+	public Window(int width, int height, String title, boolean resizable) {
+		this(width, height, title, resizable, 0, false);
 	}
 	
 	public Window(int width, int height, String title, int screen, boolean fullscreen) {
+		this(width, height, title, true, screen, fullscreen);
+	}
+	
+	public Window(int width, int height, String title, boolean resizable, int screen, boolean fullscreen) {
 		super(title);
 		canvas = new Canvas();
+		canvas.setBackground(Color.black);
+		canvas.setFocusTraversalKeysEnabled(false);		//disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
+		Toolkit.getDefaultToolkit().setDynamicLayout(false); //resizaa componentit vasta kun ikkunan resize on valmis, ei vilku niin paljoa
 		
-		super.setPreferredSize(new Dimension(width, height));	//laitetaan ikkunan koko
+		//tää vaikuttaa vaan ikkunaan, parempi laittaa canvasiin, niin toimii paremmin
+		//super.setPreferredSize(new Dimension(width, height));
+		
+		canvas.setSize(width, height); //laitetaan canvasin koko (ikkunan koko on vähän isompi, kun siinä on reunat) (setVisible ei saa olla setSize ja pack välissä)
 		super.setMinimumSize(new Dimension(256, 144));
-		//frame.setMaximumSize(new Dimension(width, height));
+		
+		
+		handleCloseOperation();
+		
+		super.setResizable(resizable);		//voiko ikkunaa venyttää, oletus oli true
+		super.setLocationRelativeTo(null);	//ikkuna syntyy näytön keskelle
+		super.add(canvas);					//lisätään peli ikkunaan
+		super.pack();						//pakkaa addatut tavarat ikkunaan, ja ikkunasta tulee siten oikean kokoinen
+		
+		super.setVisible(true);				//laitetaan ikkuna näkyväksi
+		
+		setScreenPriv(screen);
+		
 		
 		//FULLSCREEN STUFF
+		this.fullscreen = fullscreen;
 		if (fullscreen) {
-			super.setExtendedState(JFrame.MAXIMIZED_BOTH);
-			super.setUndecorated(true);
+			//this might not resize everything if all the items are not fully initialized inside the window.
+			//To quarantee it works, call setFullscreen later, or set width and height based on the screen size.
+			//(Might need to call setFullscreen(false) before calling setFullscreen(true))
+			setFullscreen(true);
+			/*super.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			super.setUndecorated(true);*/
 		}
 		
-		super.addWindowListener(new WindowAdapter() { //ikkuna sulkeutuu rastista ja pystyy kutsua myös metodia
+		canvas.requestFocus();
+	}
+	
+	private void handleCloseOperation() {
+		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//ikkuna sulkeutuu rastista
+		
+		super.addWindowListener(new WindowAdapter() {	//ikkunan voi laittaa sulkeutumaan rastista ja pystyy kutsua myös metodia
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//closing
@@ -52,32 +96,39 @@ public class Window extends JFrame {
 				//back from minimized
 			}
 		});
-		
-		
-		
-		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//ikkuna sulkeutuu rastista
-		//super.setResizable(false);							//ikkunaa ei voi venyttää
-		super.add(canvas);										//lisätään peli ikkunaan
-		super.pack();											//tehdään JFrame windowista halutun kokoinen
-		super.setLocationRelativeTo(null);						//ikkuna syntyy näytön keskelle
-		super.setVisible(true);									//laitetaan ikkuna näkyväksi
-		
-		Insets inset = super.getInsets();
-		super.setPreferredSize(new Dimension(width + inset.left + inset.right, height + inset.top + inset.bottom));
-		super.pack();
-		
-		setScreen(this, screen);
 	}
 	
 	public Canvas getCanvas() {
 		return canvas;
 	}
 	
+	public int getCanvasWidth() {
+		return canvas.getWidth();
+	}
+	
+	public int getCanvasHeight() {
+		return canvas.getHeight();
+	}
+	
+	/**
+	 * Returns the bounds of the canvas with location relative to the screen,
+	 * not to the window, like canvas.getBounds() would.
+	 * @return 
+	 */
+	public Rectangle getCanvasBounds() {
+		Insets inset = getInsets();
+		return new Rectangle(getX() + inset.left + canvas.getX(), getY() + inset.top + canvas.getY(), canvas.getWidth(), canvas.getHeight());
+	}
+	
 	public void close() {
 		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
 	
-	public static void setScreen(JFrame frame, int screen) {
+	public void setScreen(int screen) {
+		setScreenPriv(screen);
+	}
+	
+	private void setScreenPriv(int screen) {
 		GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
 		
@@ -93,7 +144,7 @@ public class Window extends JFrame {
 		
 		Rectangle gcBounds = monitor.getDefaultConfiguration().getBounds();
 		
-		Dimension windowSize = frame.getSize();
+		Dimension windowSize = super.getSize();
 		Point centerPoint = new Point((int) gcBounds.getCenterX(), (int) gcBounds.getCenterY());
 		int dx = centerPoint.x - windowSize.width / 2;
 		int dy = centerPoint.y - windowSize.height / 2;
@@ -116,10 +167,11 @@ public class Window extends JFrame {
 			dx = gcBounds.x;
 		}
 		
-		frame.setLocation(dx, dy);
+		super.setLocation(dx, dy);
 	}
 	
 	public void setFullscreen(boolean fullscreen) {
+		this.fullscreen = fullscreen;
 		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(fullscreen ? this : null);
 	}
 	
@@ -133,8 +185,8 @@ public class Window extends JFrame {
 		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
 		setGraphicsRenderingHints(g);
 		
-		g.setColor(Color.black);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
+		/*g.setColor(Color.black); //if canvas.setBackground isn't good, you can just render it here.
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());*/
 		
 		return g;
 	}
@@ -149,5 +201,9 @@ public class Window extends JFrame {
 	public void display(Graphics2D g) {
 		g.dispose();
 		canvas.getBufferStrategy().show();
+	}
+
+	public boolean isFullscreen() {
+		return fullscreen;
 	}
 }
