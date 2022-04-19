@@ -27,6 +27,18 @@ public class HelperFunctions {
 		return Math.abs(a - b);
 	}
 	
+	public static double pythagoras(double x, double y) {
+		return Math.sqrt(x * x + y * y);
+	}
+	
+	public static double distance(Point start, Point end) {
+		return distance(start.x, start.y, end.x, end.y);
+	}
+	
+	public static double distance(double startX, double startY, double toX, double toY) {
+		return pythagoras(toX - startX, toY - startY);
+	}
+	
 	public static double clamp(double val, double min, double max) {
 		return Math.min(max, Math.max(min, val));
 	}

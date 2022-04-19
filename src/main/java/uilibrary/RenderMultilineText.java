@@ -11,6 +11,11 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import uilibrary.menu.HelperFunctions;
 
+/**
+ * Renders text in multiple lines inside bounds.
+ * Splits lines after words.
+ * If you need temporary graphics object use RenderText.getFakeGraphics().
+ */
 public class RenderMultilineText extends RenderText {
 	
 	public static Rectangle drawMultilineText(Graphics2D g, String allTexts, Font font, Rectangle bounds, boolean overflow, Alignment... aligns) {
@@ -69,6 +74,10 @@ public class RenderMultilineText extends RenderText {
 		return texts.length;
 	}
 	
+	public static int countAllLines(String allTexts, Font font, Rectangle bounds) {
+		return countAllLines(getFakeGraphics(), allTexts, font, bounds);
+	}
+	
 	public static int countAllLines(Graphics2D g, String allTexts, Font font, Rectangle bounds) {
 		String[] texts = allTexts.split("\n", -1);
 		ArrayList<String> lines = createAllLines(g, texts, font, bounds);
@@ -95,6 +104,21 @@ public class RenderMultilineText extends RenderText {
 		}
 		
 		return longest;
+	}
+	
+	public static Rectangle getRenderedBounds(String allTexts, Font font, Rectangle bounds, Alignment... aligns) {
+		return getRenderedBounds(getFakeGraphics(), allTexts, font, bounds, aligns);
+	}
+	
+	public static Rectangle getRenderedBounds(Graphics2D g, String allTexts, Font font, Rectangle bounds, Alignment... aligns) {
+		Dimension neededSpace = getNeededSpace(g, allTexts, font, bounds);
+		Point XYOffset = HelperFunctions.xAndYOffsetInsideBoundsFromAlignment(bounds, neededSpace, aligns);
+		
+		return new Rectangle(bounds.x + XYOffset.x, bounds.y + XYOffset.y, neededSpace.width, neededSpace.height);
+	}
+	
+	public static Dimension getNeededSpace(String allTexts, Font font, Rectangle bounds) {
+		return getNeededSpace(getFakeGraphics(), allTexts, font, bounds);
 	}
 	
 	public static Dimension getNeededSpace(Graphics2D g, String allTexts, Font font, Rectangle bounds) {

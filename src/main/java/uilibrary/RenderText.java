@@ -2,6 +2,7 @@ package uilibrary;
 
 import uilibrary.enums.Alignment;
 import java.awt.BasicStroke;
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -17,11 +18,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 
-/**
- * If you need font metrics without graphics, you could do:
- * Canvas c = new Canvas();
- * FontMetrics fm = c.getFontMetrics(font);
- */
 public class RenderText {
 	public static Font defaultFont = new Font("Serif", Font.BOLD, 25);
 	
@@ -143,6 +139,10 @@ public class RenderText {
 		return new Rectangle(x, y - height, width, height);
 	}
 	
+	public static int getFontHeight(Font font) {
+		return getFontHeight(getFakeGraphics(), font);
+	}
+	
 	public static int getFontHeight(Graphics2D g, Font font) {
 		if (font == null) {
 			font = defaultFont;
@@ -150,6 +150,10 @@ public class RenderText {
 		FontMetrics metrics = g.getFontMetrics(font);
 		
 		return metrics.getAscent() - metrics.getDescent() - metrics.getLeading() * 2;
+	}
+	
+	public static int getStringWidth(Font font, String text) {
+		return getStringWidth(getFakeGraphics(), font, text);
 	}
 	
 	public static int getStringWidth(Graphics2D g, Font font, String text) {
@@ -161,6 +165,10 @@ public class RenderText {
 		return metrics.stringWidth(text);
 	}
 	
+	public static int getFontLineInterval(Font font) {
+		return getFontLineInterval(getFakeGraphics(), font);
+	}
+	
 	//Line height
 	public static int getFontLineInterval(Graphics2D g, Font font) {
 		if (font == null) {
@@ -169,5 +177,22 @@ public class RenderText {
 		FontMetrics metrics = g.getFontMetrics(font);
 		
 		return metrics.getAscent() + metrics.getDescent() + metrics.getLeading();
+	}
+	
+	public static Graphics2D getFakeGraphics() {
+		return getFakeGraphics(true);
+	}
+	
+	public static Graphics2D getFakeGraphics(boolean addRenderingHints) {
+		BufferedImage b = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = b.createGraphics();
+		if (addRenderingHints) {
+			Window.setGraphicsRenderingHints(g);
+		}
+		return g;
+	}
+	
+	public static FontMetrics getFakeFontMetrics(Font font) {
+		return getFakeGraphics().getFontMetrics(font);
 	}
 }
