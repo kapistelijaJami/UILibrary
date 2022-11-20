@@ -11,10 +11,11 @@ import uilibrary.menu.HelperFunctions;
 
 //Tee tähän viel sillei, että pystyy pilkkoo useamminkin samaan suuntaan
 public class Divider extends Panel {
-	private int value;		//actual vertical/horizontal distance from top/left
-	private int length;		//how long the divider is
-	private int thickness;	//how thick it is for mouse to grab onto
-	private int minSpace;	//how much space both panels have to have minimum.
+	private int value;			//actual vertical/horizontal distance from top/left
+	private int length;			//how long the divider is
+	private int thickness;		//how thick it is for mouse to grab onto
+	private int firstMinSpace;	//how much space first panel have to have minimum.
+	private int secondMinSpace;	//how much space second panel have to have minimum.
 	private int maxSpace;
 	
 	public DividerOrientation dir;
@@ -30,11 +31,16 @@ public class Divider extends Panel {
 	private Panel first, second; //panels that this scales and is in between at.
 	
 	public Divider(int value, int thickness, int minSpace, Panel first, Panel second, DividerOrientation dir) {
+		this(value, thickness, minSpace, minSpace, first, second, dir);
+	}
+	
+	public Divider(int value, int thickness, int firstMinSpace, int secondMinSpace, Panel first, Panel second, DividerOrientation dir) {
 		super(0, 0);
 		
 		this.value = value;
 		this.thickness = thickness;
-		this.minSpace = minSpace;
+		this.firstMinSpace = firstMinSpace;
+		this.secondMinSpace = secondMinSpace;
 		
 		this.first = first;
 		this.second = second;
@@ -80,7 +86,7 @@ public class Divider extends Panel {
 	}
 	
 	public void updateValue(int newVal) {
-		value = HelperFunctions.clamp(newVal, minSpace, getTotalSpace() - minSpace);
+		value = HelperFunctions.clamp(newVal, firstMinSpace, getTotalSpace() - secondMinSpace);
 		changePosition();
 	}
 	
@@ -251,12 +257,12 @@ public class Divider extends Panel {
 		
 		second.setSpace((int) (maxSpace - first.getSpace(dir)), dir.getFirst()); //this is dir.getFirst() on purpose, to change the space so that only space changes, not the start location. We changed start location manually.
 		
-		if (first.getSpace(dir) < minSpace) {
-			updateValue(minSpace);
+		if (first.getSpace(dir) < firstMinSpace) {
+			updateValue(firstMinSpace);
 		}
 		
-		if (second.getSpace(dir) < minSpace) {
-			updateValue(getTotalSpace() - minSpace);
+		if (second.getSpace(dir) < secondMinSpace) {
+			updateValue(getTotalSpace() - secondMinSpace);
 		}
 		
 		maxSpaceChanged = false;

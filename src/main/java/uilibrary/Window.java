@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
-import java.awt.Label;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -24,6 +23,7 @@ import javax.swing.JFrame;
 public class Window extends JFrame {
 	private Canvas canvas;
 	private boolean fullscreen;
+	private Color background = Color.black;
 	
 	public Window(int width, int height, String title) {
 		this(width, height, title, true, 0, false);
@@ -40,7 +40,6 @@ public class Window extends JFrame {
 	public Window(int width, int height, String title, boolean resizable, int screen, boolean fullscreen) {
 		super(title);
 		canvas = new Canvas();
-		canvas.setBackground(Color.black);
 		canvas.setFocusTraversalKeysEnabled(false);		//disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
 		Toolkit.getDefaultToolkit().setDynamicLayout(false); //resizaa componentit vasta kun ikkunan resize on valmis, ei vilku niin paljoa
 		
@@ -108,6 +107,10 @@ public class Window extends JFrame {
 	
 	public int getCanvasHeight() {
 		return canvas.getHeight();
+	}
+	
+	public void setCanvasBackground(Color color) {
+		background = color;
 	}
 	
 	/**
@@ -185,8 +188,8 @@ public class Window extends JFrame {
 		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
 		setGraphicsRenderingHints(g);
 		
-		/*g.setColor(Color.black); //if canvas.setBackground isn't good, you can just render it here.
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());*/
+		g.setColor(background);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		
 		return g;
 	}
