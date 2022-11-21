@@ -69,11 +69,24 @@ public class RenderMultilineText extends RenderText {
 		return new Rectangle(bounds.x + XYOffset.x, bounds.y + XYOffset.y, neededSpace.width, neededSpace.height);
 	}
 	
+	/**
+	 * Counts actual lines separated by '\n' characters.
+	 * @param allTexts
+	 * @return 
+	 */
 	public static int countLines(String allTexts) {
 		String[] texts = allTexts.split("\n", -1);
 		return texts.length;
 	}
 	
+	/**
+	 * Counts all rendered lines. On top of the lines separated by '\n' characters,
+	 * the text will be wrapped because otherwise it crosses the bounds.
+	 * @param allTexts
+	 * @param font
+	 * @param bounds
+	 * @return 
+	 */
 	public static int countAllLines(String allTexts, Font font, Rectangle bounds) {
 		return countAllLines(getFakeGraphics(), allTexts, font, bounds);
 	}
@@ -106,6 +119,16 @@ public class RenderMultilineText extends RenderText {
 		return longest;
 	}
 	
+	/**
+	 * Returns the actual space needed to render the text inside given bounds.
+	 * Rectangle x and y will be the location of the top left corner of this area,
+	 * and width and height will be the size of the area.
+	 * @param allTexts
+	 * @param font
+	 * @param bounds What are the bounds where this text should be fitted. Might overflow from below if too much text.
+	 * @param aligns
+	 * @return 
+	 */
 	public static Rectangle getRenderedBounds(String allTexts, Font font, Rectangle bounds, Alignment... aligns) {
 		return getRenderedBounds(getFakeGraphics(), allTexts, font, bounds, aligns);
 	}
@@ -134,7 +157,9 @@ public class RenderMultilineText extends RenderText {
 		float lineHeight = getFontLineInterval(g, font);
 		int height = (int) (lineHeight * lines.size());
 		
-		return new Dimension(width > bounds.width ? bounds.width : width, height > bounds.height ? bounds.height : height);
+		//width shouldn't be larger than bounds.width, unless single character cant fit inside bounds.width
+		//height could be bigger, then we return bounds.height. Overflow will decide if it gets rendered below bounds.
+		return new Dimension(Math.min(width, bounds.width), Math.min(height, bounds.height));
 	}
 	
 	private static ArrayList<String> createAllLines(Graphics2D g, String[] texts, Font font, Rectangle bounds) {

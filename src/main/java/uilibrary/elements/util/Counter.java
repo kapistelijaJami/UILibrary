@@ -1,12 +1,16 @@
 package uilibrary.elements.util;
 
+/**
+ * Counts up from start, when reaches end, it is done.
+ * Call advance to count up by one.
+ */
 public class Counter {
 	private int counter;
 	private int start;
 	private int end;
 	private boolean done = false;
 	private boolean active = false;
-	private boolean doneAskedWhenTrue = false; //changes to true when isDone is called and the done result was true
+	private boolean wasDoneWhenAsked = false; //true if isDone was called and it returned true, changes to true when isDone is called and the done result was true
 	
 	public Counter(int start, int end) { //end is inclusive, when counter reaches end exactly it stops.
 		this(start, end, false);
@@ -33,26 +37,34 @@ public class Counter {
 	public void reset() {
 		counter = start;
 		done = false;
-		doneAskedWhenTrue = false;
+		wasDoneWhenAsked = false;
 	}
 	
 	public boolean isDone() {
 		if (done) {
-			doneAskedWhenTrue = true;
+			wasDoneWhenAsked = true;
 		}
 		return done;
 	}
-
+	
+	/**
+	 * Counter keeps active if user hasn't called stop even if counter is done.
+	 * @return 
+	 */
 	public boolean isActive() {
 		return active;
 	}
 	
+	/**
+	 * Counter doesn't stay running when counter is done, even if it's still active.
+	 * @return 
+	 */
 	public boolean isRunning() {
 		return !done && active;
 	}
 
-	public boolean hasDoneAskedWhenTrue() {
-		return doneAskedWhenTrue;
+	public boolean wasDoneWhenAsked() {
+		return wasDoneWhenAsked;
 	}
 	
 	public void start() {

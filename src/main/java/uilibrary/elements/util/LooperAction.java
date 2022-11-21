@@ -3,7 +3,8 @@ package uilibrary.elements.util;
 import java.util.function.Consumer;
 
 /**
- * Constantly calls an assigned function using a counter.
+ * Constantly calls an assigned function when count is done.
+ * Uses a Counter object.
  */
 public class LooperAction {
 	private Counter counter;
@@ -13,13 +14,16 @@ public class LooperAction {
 	/**
 	 * Creates a looper that counts up from start to end in each update, and then runs the action.
 	 * Both start and end is inclusive.
+	 * Create consumer with Lambda Expression: (o -> functionToCall())
+	 * or with method reference this::functionToCall (for non-static, also for specific object works) OR MyClass::functionToCall (for static)
 	 * @param action
 	 * @param start
 	 * @param end 
 	 */
 	public LooperAction(Consumer<Object> action, int start, int end) {
 		this.action = action;
-		this.counter = new Counter(start, end, true);
+		boolean isActive = true;
+		this.counter = new Counter(start, end, isActive);
 	}
 	
 	/**

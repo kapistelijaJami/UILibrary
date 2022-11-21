@@ -6,6 +6,8 @@ package uilibrary;
  * Implement required methods. Update and render will be called back to back fps times a second.
  * Call start() for this object and you are good.
  * Override shutdown() to decide what to do when stopping the loop.
+ * You can also override lazyUpdate, which is called every 250ms,
+ * to maybe display fps in title etc, or do something else which doesn't happen every update.
  */
 public abstract class GameLoop implements Runnable {
 	protected final int FPS;
@@ -15,26 +17,32 @@ public abstract class GameLoop implements Runnable {
 		this.FPS = fps;
 	}
 	
+	protected abstract void init();
 	protected abstract void update();
 	protected abstract void render();
-	protected abstract void init();
-	protected abstract void updateTitle(int fps);
+	
+	/**
+	 * Called every 250ms.
+	 * @param fps What is the fps right now.
+	 */
+	protected void lazyUpdate(int fps) {}
 	
 	/**
 	 * Calls System.exit().
 	 * Can be overridden to shut down other stuff as well (like window).
-	 * You can decide if you want to call System.exit() as well.
+	 * You can decide if you want to call System.exit() as well,
+	 * or just call super.shutdown() at the end.
 	 */
 	protected void shutdown() {
 		System.exit(0);
 	}
 	
-	public synchronized void start() { //not sure if need synchronized
+	public void start() {
 		init();
 		new Thread(this).start();
 	}
 	
-	public synchronized void stop() {
+	public void stop() {
 		running = false;
 	}
 	
@@ -55,7 +63,7 @@ public abstract class GameLoop implements Runnable {
 				
 				if (time + 250 < System.currentTimeMillis()) {
 					time += 250;
-					updateTitle(frames * 4);
+					lazyUpdate(frames * 4);
 					frames = 0;
 				}
 			}

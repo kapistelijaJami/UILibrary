@@ -169,7 +169,13 @@ public class RenderText {
 		return getFontLineInterval(getFakeGraphics(), font);
 	}
 	
-	//Line height
+	/**
+	 * Line height.
+	 * Can be multiplied by lineCount to get total height.
+	 * @param g
+	 * @param font
+	 * @return 
+	 */
 	public static int getFontLineInterval(Graphics2D g, Font font) {
 		if (font == null) {
 			font = defaultFont;

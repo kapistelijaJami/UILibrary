@@ -134,10 +134,6 @@ public class Button {
 		}
 	}
 	
-	public void setActionMethod(Consumer<Object> action) {
-		this.action = action;
-	}
-	
 	public void update() {}
 	
 	public void render(Graphics2D g) {

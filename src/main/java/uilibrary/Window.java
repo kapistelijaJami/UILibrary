@@ -18,7 +18,7 @@ import javax.swing.JFrame;
 
 /**
  * Basic window with a canvas where you can draw with Graphics2D object.
- * Ask for graphics2D with getGraphics2D() method, then render, and finally call display(g).
+ * Ask for graphics2D with getGraphics2D() method, then render with it, and finally call display(g).
  */
 public class Window extends JFrame {
 	private Canvas canvas;
@@ -121,6 +121,10 @@ public class Window extends JFrame {
 	public Rectangle getCanvasBounds() {
 		Insets inset = getInsets();
 		return new Rectangle(getX() + inset.left + canvas.getX(), getY() + inset.top + canvas.getY(), canvas.getWidth(), canvas.getHeight());
+	}
+	
+	public Dimension getCanvasSize() {
+		return new Dimension(canvas.getWidth(), canvas.getHeight());
 	}
 	
 	public void close() {
