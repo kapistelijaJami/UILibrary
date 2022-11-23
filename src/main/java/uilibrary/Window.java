@@ -19,6 +19,8 @@ import javax.swing.JFrame;
 /**
  * Basic window with a canvas where you can draw with Graphics2D object.
  * Ask for graphics2D with getGraphics2D() method, then render with it, and finally call display(g).
+ * Add the listeners to the canvas.
+ * Added focus method to focus on the canvas and bringing the window to front.
  */
 public class Window extends JFrame {
 	private Canvas canvas;
@@ -73,7 +75,7 @@ public class Window extends JFrame {
 			super.setUndecorated(true);*/
 		}
 		
-		canvas.requestFocus();
+		focus();
 	}
 	
 	private void handleCloseOperation() {
@@ -180,6 +182,7 @@ public class Window extends JFrame {
 	public void setFullscreen(boolean fullscreen) {
 		this.fullscreen = fullscreen;
 		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(fullscreen ? this : null);
+		focus();
 	}
 	
 	public Graphics2D getGraphics2D() {
@@ -212,5 +215,15 @@ public class Window extends JFrame {
 
 	public boolean isFullscreen() {
 		return fullscreen;
+	}
+	
+	/**
+	 * Request focus.
+	 * Made to request focus for canvas, and to get
+	 * the best possible chance of getting the focus.
+	 */
+	public void focus() {
+		toFront();
+		getCanvas().requestFocus();
 	}
 }

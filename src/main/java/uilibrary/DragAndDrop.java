@@ -11,7 +11,7 @@ import javax.swing.TransferHandler;
 
 /**
  * DragAndDrop TransferHandler.
- * Use it by passing it to <code>JComponents</code> <code>setTransferHandler</code> method.
+ * Use it by passing it to <code>JComponent's</code> <code>setTransferHandler</code> method.
  * <p>
  * Simple usage is:
  * <code>jFrameWindow.setTransferHandler(new DragAndDrop(this::openFile));</code>
@@ -21,7 +21,7 @@ import javax.swing.TransferHandler;
  * Requires java 8.
  */
 public class DragAndDrop extends TransferHandler {
-	private Function<TransferHandler.TransferSupport, Boolean> onCanImport;
+	private Function<TransferSupport, Boolean> onCanImport;
 	private Function<List<File>, Boolean> onImportData;
 	
 	/**
@@ -38,19 +38,22 @@ public class DragAndDrop extends TransferHandler {
 	/**
 	 * Creates a DragAndDrop TransferHandler.
 	 * <p>
-	 * It takes two functions, which are called when their matching method is called here.
-	 * They return a {@code boolean } same way as their matching methods.
+	 * It takes two functions, onCanImport which is called when canImport is called, and
+	 * onImportData which is called when importData is called here.
+	 * They return a <code>boolean</code> same way as their matching methods.
 	 * <p>
 	 * Create the function with either lambda expression:
 	 * input -> input.returnsAValue()
 	 * <p>
 	 * or like this with a lambda expression:
-	 * <pre><code>
-	 * Function<List<File>, Boolean> onImportData = fileList -> {
-	 *	   this.openFile(fileList.get(0));
-	 *	   return true;
-	 * };
-	 * </code></pre>
+	 * <pre>
+	 * {@code
+	 *	Function<List<File>, Boolean> onImportData = fileList -> {
+	 *		this.openFile(fileList.get(0));
+	 *		return true;
+	 *	};
+	 * }
+	 * </pre>
 	 * 
 	 * OR just reference a method that has the same input and return value.
 	 * <p>
@@ -63,7 +66,7 @@ public class DragAndDrop extends TransferHandler {
 	 * @param onCanImport
 	 * @param onImportData 
 	 */
-	public DragAndDrop(Function<TransferHandler.TransferSupport, Boolean> onCanImport, Function<List<File>, Boolean> onImportData)  {
+	public DragAndDrop(Function<TransferSupport, Boolean> onCanImport, Function<List<File>, Boolean> onImportData)  {
 		this.onCanImport = onCanImport;
 		this.onImportData = onImportData;
 	}
@@ -77,10 +80,11 @@ public class DragAndDrop extends TransferHandler {
 	 * @return <code>true</code> if the import can happen, <code>false</code> otherwise
 	 */
 	@Override
-	public boolean canImport(TransferHandler.TransferSupport support) {
+	public boolean canImport(TransferSupport support) {
 		if (!support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 			return false;
 		}
+		
 
 		/*if (shouldCopy()) {
 			boolean copySupported = (COPY & support.getSourceDropActions()) == COPY;
@@ -109,7 +113,7 @@ public class DragAndDrop extends TransferHandler {
 	 * @return Was the drop successful or not
 	 */
 	@Override
-	public boolean importData(TransferHandler.TransferSupport support) {
+	public boolean importData(TransferSupport support) {
 		Transferable transferable = support.getTransferable();
 		
 		try {

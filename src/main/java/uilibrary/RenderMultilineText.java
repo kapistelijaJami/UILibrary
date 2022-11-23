@@ -9,7 +9,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import uilibrary.enums.ReferenceType;
 import uilibrary.menu.HelperFunctions;
+import uilibrary.menu.Margin;
 
 /**
  * Renders text in multiple lines inside bounds.
@@ -17,6 +19,22 @@ import uilibrary.menu.HelperFunctions;
  * If you need temporary graphics object use RenderText.getFakeGraphics().
  */
 public class RenderMultilineText extends RenderText {
+	public enum TextHorizontalAlign {
+		LEFT, CENTER, RIGHT; //When multiline text has shorter rows than others, they will be aligned with the rest with this enum.
+		
+		/**
+		 * Converts to normal alignment for use in other functions that aligns horizontally.
+		 * @return 
+		 */
+		public Alignment toAlignment() {
+			if (this == LEFT) {
+				return Alignment.LEFT;
+			} else if (this == RIGHT) {
+				return Alignment.RIGHT;
+			}
+			return Alignment.CENTER;
+		}
+	}
 	
 	public static Rectangle drawMultilineText(Graphics2D g, String allTexts, Font font, Rectangle bounds, boolean overflow, Alignment... aligns) {
 		String[] texts = allTexts.split("\n", -1); //limit -1, so empty strings will be included
@@ -34,6 +52,26 @@ public class RenderMultilineText extends RenderText {
 	 * @return Returns render area.
 	 */
 	public static Rectangle drawMultilineText(Graphics2D g, String[] texts, Font font, Rectangle bounds, boolean overflow, Alignment... aligns) {
+		return drawMultilineText(g, texts, font, bounds, overflow, TextHorizontalAlign.LEFT, aligns);
+	}
+	
+	public static Rectangle drawMultilineText(Graphics2D g, String allTexts, Font font, Rectangle bounds, boolean overflow, TextHorizontalAlign horizAlign, Alignment... aligns) {
+		String[] texts = allTexts.split("\n", -1); //limit -1, so empty strings will be included
+		return drawMultilineText(g, texts, font, bounds, overflow, horizAlign, aligns);
+	}
+	
+	/**
+	 * Draws a multiline text with bounds and alignments inside the bounds.
+	 * @param g
+	 * @param texts
+	 * @param font
+	 * @param bounds
+	 * @param overflow Determines if the text overflows (is visible) from the bottom of the bounds (true) or is hidden (false). 
+	 * @param horizAlign When multiline text has shorter rows than others, they will be aligned with the rest with this enum. Default is LEFT.
+	 * @param aligns
+	 * @return Returns render area.
+	 */
+	public static Rectangle drawMultilineText(Graphics2D g, String[] texts, Font font, Rectangle bounds, boolean overflow, TextHorizontalAlign horizAlign, Alignment... aligns) {
 		font = checkIfFontIsNull(font);
 		g.setFont(font);
 		
@@ -59,7 +97,14 @@ public class RenderMultilineText extends RenderText {
 				break;
 			}
 			
-			g.drawString(line, bounds.x + XYOffset.x, drawPosY);
+			if (horizAlign == TextHorizontalAlign.LEFT) {
+				g.drawString(line, bounds.x + XYOffset.x, drawPosY);
+			} else {
+				int lineWidth = RenderText.getStringWidth(g, font, line);
+				int lineXOff = HelperFunctions.getXOffsetFromAlignment(neededSpace, lineWidth, new Margin(), horizAlign.toAlignment(), ReferenceType.INSIDE);
+				
+				g.drawString(line, bounds.x + XYOffset.x + lineXOff, drawPosY);
+			}
 			
 			if (i != lines.size() - 1) {
 				drawPosY += lineHeight;

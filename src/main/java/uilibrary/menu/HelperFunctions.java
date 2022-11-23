@@ -52,44 +52,44 @@ public class HelperFunctions {
 	}
 	
 	public static Point xAndYOffsetInsideBoundsFromAlignment(Rectangle bounds, Dimension size, Margin margin, Alignment... aligns) {
-		return new Point(getXOffsetFromAlignment(bounds, size, margin, Alignment.getHorizontal(aligns), ReferenceType.INSIDE), getYOffsetFromAlignment(bounds, size, margin, Alignment.getVertical(aligns), ReferenceType.INSIDE));
+		return new Point(getXOffsetFromAlignment(bounds.getSize(), size.width, margin, Alignment.getHorizontal(aligns), ReferenceType.INSIDE), getYOffsetFromAlignment(bounds, size.height, margin, Alignment.getVertical(aligns), ReferenceType.INSIDE));
 	}
 	
-	public static int getXOffsetFromAlignment(Rectangle reference, Dimension size, Margin margin, Alignment align, ReferenceType type) {
+	public static int getXOffsetFromAlignment(Dimension reference, int width, Margin margin, Alignment align, ReferenceType type) {
 		if (type == ReferenceType.INSIDE) {
 			switch (align) {
 				case LEFT:
 					return margin.x;
 				case RIGHT:
-					return reference.width - size.width - margin.x;
+					return reference.width - width - margin.x;
 			}
 		} else {
 			switch (align) {
 				case LEFT:
 					return reference.width + margin.x;
 				case RIGHT:
-					return 0 - size.width - margin.x;
+					return 0 - width - margin.x;
 			}
 		}
-		return reference.width / 2 - size.width / 2 + margin.x;
+		return reference.width / 2 - width / 2 + margin.x;
 	}
 	
-	public static int getYOffsetFromAlignment(Rectangle reference, Dimension size, Margin margin, Alignment align, ReferenceType type) {
+	public static int getYOffsetFromAlignment(Rectangle reference, int height, Margin margin, Alignment align, ReferenceType type) {
 		if (type == ReferenceType.INSIDE) {
 			switch (align) {
 				case TOP:
 					return margin.y;
 				case BOTTOM:
-					return reference.height - size.height - margin.y;
+					return reference.height - height - margin.y;
 			}
 		} else {
 			switch (align) {
 				case TOP:
 					return reference.height + margin.y;
 				case BOTTOM:
-					return 0 - size.height - margin.y;
+					return 0 - height - margin.y;
 			}
 		}
-		return reference.height / 2 - size.height / 2 + margin.y;
+		return reference.height / 2 - height / 2 + margin.y;
 	}
 }

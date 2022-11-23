@@ -2,12 +2,14 @@ package uilibrary;
 
 /**
  * Game loop library for running update and render methods in a separate thread with specific fps.
+ * 
+ * USAGE:
  * Create a subclass that extends GameLoop.
  * Implement required methods. Update and render will be called back to back fps times a second.
  * Call start() for this object and you are good.
  * Override shutdown() to decide what to do when stopping the loop.
- * You can also override lazyUpdate, which is called every 250ms,
- * to maybe display fps in title etc, or do something else which doesn't happen every update.
+ * You can also override lazyUpdate, which is called every 250ms, to maybe display
+ * fps in title etc, or do something else which doesn't happen every update.
  */
 public abstract class GameLoop implements Runnable {
 	protected final int FPS;
@@ -30,7 +32,7 @@ public abstract class GameLoop implements Runnable {
 	/**
 	 * Calls System.exit().
 	 * Can be overridden to shut down other stuff as well (like window).
-	 * You can decide if you want to call System.exit() as well,
+	 * You can decide if you want to call System.exit() as well or not,
 	 * or just call super.shutdown() at the end.
 	 */
 	protected void shutdown() {
