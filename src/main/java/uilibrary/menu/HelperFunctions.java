@@ -52,9 +52,23 @@ public class HelperFunctions {
 	}
 	
 	public static Point xAndYOffsetInsideBoundsFromAlignment(Rectangle bounds, Dimension size, Margin margin, Alignment... aligns) {
-		return new Point(getXOffsetFromAlignment(bounds.getSize(), size.width, margin, Alignment.getHorizontal(aligns), ReferenceType.INSIDE), getYOffsetFromAlignment(bounds, size.height, margin, Alignment.getVertical(aligns), ReferenceType.INSIDE));
+		return new Point(getXOffsetFromAlignment(bounds.getSize(), size.width, margin, Alignment.getHorizontal(aligns), ReferenceType.INSIDE), getYOffsetFromAlignment(bounds.getSize(), size.height, margin, Alignment.getVertical(aligns), ReferenceType.INSIDE));
 	}
 	
+	/**
+	 * Gets how many pixels in x direction in relation to the reference object
+	 * should you place some other object which size is {@code size}.
+	 * Uses Alignment to align itself and calculate the position.
+	 * ReferenceType tells if the other object will be aligned inside the reference, or outside.
+	 * If the ReferenceType is OUTSIDE, but it is the second Alignment, and the reference uses only one object for both horizontal and vertical,
+	 * then the ReferenceType should be swapped to INSIDE for these calculations for the second Alignment.
+	 * @param reference
+	 * @param width
+	 * @param margin Extra offset to add spacing.
+	 * @param align
+	 * @param type
+	 * @return 
+	 */
 	public static int getXOffsetFromAlignment(Dimension reference, int width, Margin margin, Alignment align, ReferenceType type) {
 		if (type == ReferenceType.INSIDE) {
 			switch (align) {
@@ -74,7 +88,22 @@ public class HelperFunctions {
 		return reference.width / 2 - width / 2 + margin.x;
 	}
 	
-	public static int getYOffsetFromAlignment(Rectangle reference, int height, Margin margin, Alignment align, ReferenceType type) {
+	
+	/**
+	 * Gets how many pixels in y direction in relation to the reference object
+	 * should you place some other object which size is {@code size}.
+	 * Uses Alignment to align itself and calculate the position.
+	 * ReferenceType tells if the other object will be aligned inside the reference, or outside.
+	 * If the ReferenceType is OUTSIDE, but it is the second Alignment, and the reference uses only one object for both horizontal and vertical,
+	 * then the ReferenceType should be swapped to INSIDE for these calculations for the second Alignment.
+	 * @param reference
+	 * @param height
+	 * @param margin Extra offset to add spacing.
+	 * @param align
+	 * @param type
+	 * @return 
+	 */
+	public static int getYOffsetFromAlignment(Dimension reference, int height, Margin margin, Alignment align, ReferenceType type) {
 		if (type == ReferenceType.INSIDE) {
 			switch (align) {
 				case TOP:

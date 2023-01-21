@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 import javax.swing.TransferHandler;
+import javax.swing.TransferHandler.TransferSupport;
 
 /**
  * DragAndDrop TransferHandler.
@@ -22,58 +23,87 @@ import javax.swing.TransferHandler;
  */
 public class DragAndDrop extends TransferHandler {
 	private Function<TransferSupport, Boolean> onCanImport;
-	private Function<List<File>, Boolean> onImportData;
+	private Function<List<File>, Boolean> onImportFile;
+	private Function<String, Boolean> onImportText;
+	
+	public DragAndDrop()  {}
 	
 	/**
 	 * Creates a DragAndDrop TransferHandler.
 	 * <p>
 	 * For more details on how to create these functions, see
-	 * {@link DragAndDrop#DragAndDrop(Function<TransferHandler.TransferSupport, Boolean>, Function<List<File>, Boolean>)}
-	 * @param onImportData 
+	 * {@link DragAndDrop#DragAndDrop(Function<TransferSupport, Boolean>, Function<List<File>, Boolean>, Function<String, Boolean>)}
+	 * @param onImportFile 
 	 */
-	public DragAndDrop(Function<List<File>, Boolean> onImportData)  {
-		this(null, onImportData);
+	public DragAndDrop(Function<List<File>, Boolean> onImportFile)  {
+		this(null, onImportFile);
+	}
+	
+	public DragAndDrop(Function<TransferSupport, Boolean> onCanImport, Function<List<File>, Boolean> onImportFile)  {
+		this(onCanImport, onImportFile, null);
 	}
 	
 	/**
 	 * Creates a DragAndDrop TransferHandler.
 	 * <p>
-	 * It takes two functions, onCanImport which is called when canImport is called, and
-	 * onImportData which is called when importData is called here.
-	 * They return a <code>boolean</code> same way as their matching methods.
+	 * It takes three functions, <code>onCanImport</code> which is called when <code>canImport</code> is called,
+	 * <code>onImportFile</code> which is called when <code>importData</code> is called here with a transfer object of files, and
+	 * <code>onImportText</code> which is called when <code>importData</code> is called here with a transfer object of text.
+	 * They return a <code>boolean</code>. For <code>onCanImport</code> whether or not the transfer is supported.
+	 * For <code>onImportFile</code> and <code>onImportText</code> whether or not the transfer was successful.
 	 * <p>
-	 * Create the function with either lambda expression:
-	 * input -> input.returnsAValue()
+	 * Create a function with one of these methods:
+	 * <ul>
+	 * <li>Lambda expression:
+	 * <ul>
+	 * <li>One-liner: <code>input -> input.returnsAValue()</code></li>
 	 * <p>
-	 * or like this with a lambda expression:
+	 * <li>In block form:</li>
+	 * </ul>
 	 * <pre>
 	 * {@code
-	 *	Function<List<File>, Boolean> onImportData = fileList -> {
+	 *	Function<List<File>, Boolean> onImportFile = fileList -> {
 	 *		this.openFile(fileList.get(0));
 	 *		return true;
 	 *	};
-	 * }
-	 * </pre>
+	 * }</pre>
+	 * </li>
 	 * 
-	 * OR just reference a method that has the same input and return value.
-	 * <p>
-	 * You can reference it statically with <code>ClassName::methodName</code>,
-	 * and non-statically with <code>this::methodName</code> or <code>objectVariable::methodName</code>.
+	 * <li>Reference a method that has the same input and return value.
+	 * 
+	 * <ul>
+	 *	<li>You can reference it statically with <code>ClassName::methodName</code></li>
+	 *	<li>and non-statically with <code>this::methodName</code> or <code>objectVariable::methodName</code></li>
+	 * </ul>
 	 * <p>
 	 * Like this:
 	 * <code>new DragAndDrop(this::openFile);</code>
-	 * 
+	 * </ul>
 	 * @param onCanImport
-	 * @param onImportData 
+	 * @param onImportFile 
+	 * @param onImportText 
 	 */
-	public DragAndDrop(Function<TransferSupport, Boolean> onCanImport, Function<List<File>, Boolean> onImportData)  {
+	public DragAndDrop(Function<TransferSupport, Boolean> onCanImport, Function<List<File>, Boolean> onImportFile, Function<String, Boolean> onImportText)  {
 		this.onCanImport = onCanImport;
-		this.onImportData = onImportData;
+		this.onImportFile = onImportFile;
+		this.onImportText = onImportText;
+	}
+	
+	public void setOnCanImport(Function<TransferSupport, Boolean> onCanImport) {
+		this.onCanImport = onCanImport;
+	}
+	
+	public void setOnImportFile(Function<List<File>, Boolean> onImportFile) {
+		this.onImportFile = onImportFile;
+	}
+	
+	public void setOnImportText(Function<String, Boolean> onImportText) {
+		this.onImportText = onImportText;
 	}
 	
 	/**
 	 * This will be called repeatedly during drag and drop.
-	 * Set the properties you want on every call. Support will be fresh state.
+	 * Set the properties you want on every call. Support will be a fresh state.
 	 * This will be called right before importData as well, and importData will have the same support from the last call to canImport.
 	 * 
 	 * @param support
@@ -81,11 +111,11 @@ public class DragAndDrop extends TransferHandler {
 	 */
 	@Override
 	public boolean canImport(TransferSupport support) {
-		if (!support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+		if (!support.isDataFlavorSupported(DataFlavor.javaFileListFlavor) && !support.isDataFlavorSupported(DataFlavor.stringFlavor)) {
 			return false;
 		}
 		
-
+		
 		/*if (shouldCopy()) {
 			boolean copySupported = (COPY & support.getSourceDropActions()) == COPY;
 
@@ -105,7 +135,7 @@ public class DragAndDrop extends TransferHandler {
 	
 	/**
 	 * Will be called when dropping the drag and drop.
-	 * <code>canImport</code> will be called right before, and the support will be the same.
+	 * <code>canImport</code> will be called right before, and the support will be the same object.
 	 * <p>
 	 * Calls onCanImport function with the list of files that was dropped.
 	 * Does not call it with empty list.
@@ -117,13 +147,25 @@ public class DragAndDrop extends TransferHandler {
 		Transferable transferable = support.getTransferable();
 		
 		try {
-			List<File> list = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor); //TODO: allow importing of text
-			if (list.isEmpty()) return false;
+			DataFlavor[] flavors = transferable.getTransferDataFlavors();
 			
-			return onImportData.apply(list);
-			
+			for (DataFlavor flavor : flavors) {
+				if (onImportFile != null && flavor.isFlavorJavaFileListType()) {
+					List<File> list = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
+					if (list.isEmpty()) return false;
+					
+					return onImportFile.apply(list);
+				} else if (onImportText != null && flavor.isFlavorTextType()) {
+					String text = (String) transferable.getTransferData(DataFlavor.stringFlavor);
+					if (text.isEmpty()) return false;
+					
+					return onImportText.apply(text);
+				}
+			}
 		} catch (UnsupportedFlavorException | IOException e) {
-			return false;
+			System.err.println("Format is not supported");
 		}
+		
+		return false;
 	}
 }

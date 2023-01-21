@@ -1,5 +1,6 @@
 package uilibrary;
 
+import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,12 +16,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  * Basic window with a canvas where you can draw with Graphics2D object.
- * Ask for graphics2D with getGraphics2D() method, then render with it, and finally call display(g).
- * Add the listeners to the canvas.
- * Added focus method to focus on the canvas and bringing the window to front.
+ * Ask for graphics2D with getGraphics2D() method, then render with it, and finally call display() with the graphics object.
+ * Add most of the listeners to the canvas. You can get the canvas object with getCanvas().
+ * Added also focus method to focus on the canvas and bringing the window to front.
  */
 public class Window extends JFrame {
 	private Canvas canvas;
@@ -35,11 +37,20 @@ public class Window extends JFrame {
 		this(width, height, title, resizable, 0, false);
 	}
 	
-	public Window(int width, int height, String title, int screen, boolean fullscreen) {
-		this(width, height, title, true, screen, fullscreen);
+	public Window(int width, int height, String title, int spawnScreen, boolean fullscreen) {
+		this(width, height, title, true, spawnScreen, fullscreen);
 	}
 	
-	public Window(int width, int height, String title, boolean resizable, int screen, boolean fullscreen) {
+	/**
+	 * Creates the window with the given parameters.
+	 * @param width
+	 * @param height
+	 * @param title
+	 * @param resizable
+	 * @param spawnScreen Which screen/monitor to spawn the window. 0 is the default screen and 1 is the next etc.
+	 * @param fullscreen 
+	 */
+	public Window(int width, int height, String title, boolean resizable, int spawnScreen, boolean fullscreen) {
 		super(title);
 		canvas = new Canvas();
 		canvas.setFocusTraversalKeysEnabled(false);		//disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
@@ -52,16 +63,20 @@ public class Window extends JFrame {
 		super.setMinimumSize(new Dimension(256, 144));
 		
 		
-		handleCloseOperation();
+		setWindowCloseOperation();
+		
+		JPanel keybindingPanel = new JPanel();
+        keybindingPanel.setLayout(new BorderLayout());
+		keybindingPanel.add(canvas);
 		
 		super.setResizable(resizable);		//voiko ikkunaa venyttää, oletus oli true
 		super.setLocationRelativeTo(null);	//ikkuna syntyy näytön keskelle
-		super.add(canvas);					//lisätään peli ikkunaan
+		super.add(keybindingPanel);					//lisätään canvas ikkunaan
 		super.pack();						//pakkaa addatut tavarat ikkunaan, ja ikkunasta tulee siten oikean kokoinen
 		
 		super.setVisible(true);				//laitetaan ikkuna näkyväksi
 		
-		setScreenPriv(screen);
+		setScreen(spawnScreen);
 		
 		
 		//FULLSCREEN STUFF
@@ -78,7 +93,7 @@ public class Window extends JFrame {
 		focus();
 	}
 	
-	private void handleCloseOperation() {
+	private void setWindowCloseOperation() {
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//ikkuna sulkeutuu rastista
 		
 		super.addWindowListener(new WindowAdapter() {	//ikkunan voi laittaa sulkeutumaan rastista ja pystyy kutsua myös metodia
@@ -116,8 +131,8 @@ public class Window extends JFrame {
 	}
 	
 	/**
-	 * Returns the bounds of the canvas with location relative to the screen,
-	 * not to the window, like canvas.getBounds() would.
+	 * Returns the bounds of the canvas with location relative to the monitor,
+	 * not to the window location, like canvas.getBounds() would.
 	 * @return 
 	 */
 	public Rectangle getCanvasBounds() {
@@ -133,11 +148,12 @@ public class Window extends JFrame {
 		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
 	
-	public void setScreen(int screen) {
-		setScreenPriv(screen);
-	}
-	
-	private void setScreenPriv(int screen) {
+	/**
+	 * Sets the location of the window to a given screen/monitor.
+	 * 0 is the default screen and 1 is the next etc.
+	 * @param screen 
+	 */
+	public final void setScreen(int screen) {
 		GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
 		
@@ -179,7 +195,7 @@ public class Window extends JFrame {
 		super.setLocation(dx, dy);
 	}
 	
-	public void setFullscreen(boolean fullscreen) {
+	public final void setFullscreen(boolean fullscreen) {
 		this.fullscreen = fullscreen;
 		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(fullscreen ? this : null);
 		focus();
@@ -188,7 +204,7 @@ public class Window extends JFrame {
 	public Graphics2D getGraphics2D() {
 		BufferStrategy bs = canvas.getBufferStrategy();
 		while (bs == null) {
-			canvas.createBufferStrategy(3);
+			canvas.createBufferStrategy(2);
 			bs = canvas.getBufferStrategy();
 		}
 		
@@ -212,7 +228,7 @@ public class Window extends JFrame {
 		g.dispose();
 		canvas.getBufferStrategy().show();
 	}
-
+	
 	public boolean isFullscreen() {
 		return fullscreen;
 	}
@@ -222,7 +238,7 @@ public class Window extends JFrame {
 	 * Made to request focus for canvas, and to get
 	 * the best possible chance of getting the focus.
 	 */
-	public void focus() {
+	public final void focus() {
 		toFront();
 		getCanvas().requestFocus();
 	}

@@ -2,7 +2,6 @@ package uilibrary;
 
 import uilibrary.enums.Alignment;
 import java.awt.BasicStroke;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -104,7 +103,7 @@ public class RenderText {
 		font = checkIfFontIsNull(font);
 		
 		AffineTransform old = g.getTransform();
-		g.setTransform(new AffineTransform()); //This is here to get the metrics correct while at is rotated.
+		g.setTransform(new AffineTransform()); //This is here to get the metrics correct while original AT is rotated.
 		
 		FontMetrics metrics = g.getFontMetrics(font);
 		int width = metrics.stringWidth(text);

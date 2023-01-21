@@ -2,7 +2,8 @@ package uilibrary;
 
 /**
  * Game loop library for running update and render methods in a separate thread with specific fps.
- * 
+ * <br>
+ * <br>
  * USAGE:
  * Create a subclass that extends GameLoop.
  * Implement required methods. Update and render will be called back to back fps times a second.
@@ -14,6 +15,7 @@ package uilibrary;
 public abstract class GameLoop implements Runnable {
 	protected final int FPS;
 	protected boolean running = true;
+	private boolean infiniteFPS = false;
 	
 	public GameLoop(int fps) {
 		this.FPS = fps;
@@ -40,16 +42,25 @@ public abstract class GameLoop implements Runnable {
 	}
 	
 	public void start() {
-		init();
 		new Thread(this).start();
+	}
+	
+	public void start(String threadName) {
+		new Thread(this, threadName).start();
 	}
 	
 	public void stop() {
 		running = false;
 	}
 	
+	public void setInfiniteFPS(boolean isInfinite) {
+		infiniteFPS = isInfinite;
+	}
+	
 	@Override
 	public void run() {
+		init();
+		
 		long now = System.nanoTime();
 		long nsBetweenFrames = (long) (1e9 / FPS);
 		
@@ -57,7 +68,7 @@ public abstract class GameLoop implements Runnable {
 		int frames = 0;
 		
 		while (running) {
-			if (now + nsBetweenFrames <= System.nanoTime()) {
+			if (infiniteFPS || now + nsBetweenFrames <= System.nanoTime()) {
 				now += nsBetweenFrames;
 				update();
 				render();

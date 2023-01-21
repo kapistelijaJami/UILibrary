@@ -5,9 +5,9 @@ public enum DividerOrientation {
 	
 	/**
 	 * Which edge the divider is attached to == what edge should be moving.
-	 * TOP means that y value is changing and height too.
+	 * TOP means that y value is changing and height too (so that bottom stays where it is).
 	 * BOTTOM only height is changing.
-	 * LEFT x and width is changing.
+	 * LEFT x and width is changing (so right stays where it is).
 	 * RIGHT only width is changing.
 	 */
 	public enum ScalingDirection {
@@ -16,7 +16,7 @@ public enum DividerOrientation {
 	
 	public ScalingDirection getFirst() {
 		if (this == HORIZONTAL) {
-			return ScalingDirection.BOTTOM; //object is above, so we move the bottom edge
+			return ScalingDirection.BOTTOM; //object is above the divider, so we move the bottom edge
 		} else {
 			return ScalingDirection.RIGHT; //object is left of the divider, so we move the right edge
 		}

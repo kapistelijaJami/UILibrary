@@ -6,11 +6,25 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import java.awt.BasicStroke;
 import java.awt.RenderingHints;
 
+/*
+Different callback function types:
+	Supplier       ()    -> x
+	Consumer       x     -> ()
+	BiConsumer     x, y  -> ()
+	Callable       ()    -> x	- throws ex
+	Runnable       ()    -> ()
+	Function       x     -> y
+	BiFunction     x,y   -> z
+	Predicate      x     -> boolean
+	UnaryOperator  x1    -> x2
+	BinaryOperator x1,x2 -> x3
+
+This is why button uses Runnable.
+*/
 public class Button {
 	protected boolean isMouseOver = false;
 	protected int x;
@@ -29,14 +43,14 @@ public class Button {
 	
 	protected ArrayList<StringAlignment> texts = new ArrayList<>();
 	
-	protected Consumer<Object> action;
-	protected Consumer<Object> hoverAction = null;
+	protected Runnable action;
+	protected Runnable hoverAction = null;
 	
 	public Button(int x, int y, int width, int height, Color color) {
 		this(x, y, width, height, color, null);
 	}
 	
-	public Button(int x, int y, int width, int height, Color color, Consumer<Object> action) {
+	public Button(int x, int y, int width, int height, Color color, Runnable action) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -47,7 +61,7 @@ public class Button {
 		highlightedColor = HelperFunctions.getDarkerColor(color, 100);
 	}
 	
-	public void setAction(Consumer<Object> action) {
+	public void setAction(Runnable action) {
 		this.action = action;
 	}
 	
@@ -99,7 +113,7 @@ public class Button {
 		return new Rectangle(x, y, width, height);
 	}
 	
-	public void setHoverAction(Consumer<Object> action) {
+	public void setHoverAction(Runnable action) {
 		this.hoverAction = action;
 	}
 	
@@ -113,7 +127,7 @@ public class Button {
 			}
 			isMouseOver = true;
 			if (hoverAction != null) {
-				hoverAction.accept(null);
+				hoverAction.run();
 			}
 			return true;
 		}
@@ -130,7 +144,7 @@ public class Button {
 			return;
 		}
 		if (action != null) {
-			action.accept(null);
+			action.run();
 		}
 	}
 	

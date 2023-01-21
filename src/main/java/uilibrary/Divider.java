@@ -9,7 +9,10 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import uilibrary.menu.HelperFunctions;
 
-//Tee tähän viel sillei, että pystyy pilkkoo useamminkin samaan suuntaan
+//TODO: Tee tähän viel sillei, että pystyy pilkkoo useamminkin samaan suuntaan
+//TODO: Divider is Panel, because then you can put a divider to be one of the Panels inside another divider.
+//This could be changed so that dividers are just dividing another panel and not panels themselves,
+//but it would require current dividers to use an extra panel.
 public class Divider extends Panel {
 	private int value;			//actual vertical/horizontal distance from top/left
 	private int length;			//how long the divider is
@@ -91,9 +94,11 @@ public class Divider extends Panel {
 	}
 	
 	private void changePosition() {
-		int totalSpace = getTotalSpace(); //have to take it into a variable, because the first method call already changes this result, and I need it in the second one.
+		int totalSpace = getTotalSpace(); //have to take it into a variable, because the first setSpace() call already changes this result, and I need it in the second one.
+		
 		first.setSpace(value, dir.getFirst());
 		second.setSpace(totalSpace - value, dir.getSecond());
+		
 		updateSecondLocation();
 	}
 	
@@ -239,6 +244,15 @@ public class Divider extends Panel {
 		lengthChanged = false;
 	}
 	
+	/**
+	 * Updates the maximum space for this Divider and its children.
+	 * This method will update the space for the first child based on the proportion of space it currently occupies in relation to the total space of this Divider.
+	 * Then, the start location of the second child will be updated based on the direction of this Divider.
+	 * The space for the second child will then be set to the remaining space.
+	 * If either child's space falls below its minimum allowed space, the value will be updated accordingly.
+	 * 
+	 * @param maxSpace the new maximum space for this Divider
+	 */
 	private void updateMaxSpace() {
 		int totalSpace = getTotalSpace();
 		double firstCoefficient = first.getSpace(dir) / (double) totalSpace;

@@ -1,5 +1,47 @@
 package uilibrary.enums;
 
+/**
+ * Used to align an object relative to some bounds (reference).
+ * <br>
+ * Object can have up to 2 Alignments, for horizontal and vertical.
+ * If one or both are missing, the default will be CENTER when ReferenceType is INSIDE,
+ * but when ReferenceType is OUTSIDE and only one is missing, then it will default to TOP or LEFT.
+ * 
+ * <br>
+ * <br>
+ * 
+ * ReferenceType (INSIDE or OUTSIDE) is also used with Alignments.
+ * It will determine if the Alignment will place the object inside the bounds, or outside of them.
+ * The order of Alignments doesn't matter when ReferenceType is INSIDE,
+ * but it does matter when ReferenceType is OUTSIDE.
+ * 
+ * <br>
+ * <br>
+ * <br>
+ * 
+ * If the ReferenceType is INSIDE:
+ *		TOP will place the object inside the bounds with both tops touching.
+ *		LEFT will place the object inside the bounds with both left sides touching.
+ *		RIGHT will place the object inside the bounds with both right sides touching.
+ *		BOTTOM will place the object inside the bounds with both bottoms touching.
+ *		CENTER will act as a default alignment to center the object inside the bounds.
+ * <br>
+ * <br>
+ * <br>
+ * 
+ * If the ReferenceType is OUTSIDE:
+ * <br>
+ *	- The first Alignment is the main Alignment, it will choose the side where the object will be placed:
+ *		TOP will place the object ABOVE the bounds with bottom touching the top of the bounds.
+ *		LEFT will place the object LEFT SIDE of the bounds with right side touching the left side of the bounds.
+ *		RIGHT will place the object RIGHT SIDE of the bounds with left side touching the right side of the bounds.
+ *		BOTTOM will place the object UNDER the bounds with top touching the bottom of the bounds.
+ *		CENTER shouldn't be the first Alignment if ReferenceType is OUTSIDE. It doesn't mean anything to place outside, but center.
+ * <br>
+ * <br>
+ *	- The second Alignment on the other hand will take care of the other direction after it's placed with the first Alignment.
+ *		The effect of the second alignment will be same as with normal INSIDE alignment.
+ */
 public enum Alignment {
 	TOP, CENTER, LEFT, RIGHT, BOTTOM;
 	

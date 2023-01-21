@@ -1,7 +1,7 @@
 package uilibrary.elements.util;
 
 /**
- * Counts up from start, when reaches end, it is done.
+ * Counts up from start, when it reaches end, it is done.
  * Call advance to count up by one.
  */
 public class Counter {
