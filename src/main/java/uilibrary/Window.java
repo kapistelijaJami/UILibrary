@@ -15,6 +15,9 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -23,10 +26,12 @@ import javax.swing.JPanel;
  * Ask for graphics2D with getGraphics2D() method, then render with it, and finally call display() with the graphics object.
  * Add most of the listeners to the canvas. You can get the canvas object with getCanvas().
  * Added also focus method to focus on the canvas and bringing the window to front.
+ * You can also get the InputMap and ActionMap objects to set keybindings with getInputMap() and getActionMap().
  */
 public class Window extends JFrame {
 	private Canvas canvas;
 	private boolean fullscreen;
+	private JPanel keybindingPanel;
 	private Color background = Color.black;
 	
 	public Window(int width, int height, String title) {
@@ -56,16 +61,12 @@ public class Window extends JFrame {
 		canvas.setFocusTraversalKeysEnabled(false);		//disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
 		Toolkit.getDefaultToolkit().setDynamicLayout(false); //resizaa componentit vasta kun ikkunan resize on valmis, ei vilku niin paljoa
 		
-		//tää vaikuttaa vaan ikkunaan, parempi laittaa canvasiin, niin toimii paremmin
-		//super.setPreferredSize(new Dimension(width, height));
-		
 		canvas.setSize(width, height); //laitetaan canvasin koko (ikkunan koko on vähän isompi, kun siinä on reunat) (setVisible ei saa olla setSize ja pack välissä)
 		super.setMinimumSize(new Dimension(256, 144));
 		
-		
 		setWindowCloseOperation();
 		
-		JPanel keybindingPanel = new JPanel();
+		keybindingPanel = new JPanel(); //JPanel between the window and canvas so you can add keybindings to the panel since it's JComponent.
         keybindingPanel.setLayout(new BorderLayout());
 		keybindingPanel.add(canvas);
 		
@@ -242,4 +243,32 @@ public class Window extends JFrame {
 		toFront();
 		getCanvas().requestFocus();
 	}
+	
+	public InputMap getInputMap() {
+		return getInputMap(JComponent.WHEN_FOCUSED);
+	}
+	
+	/**
+	 * Get the input map.
+	 * @param condition One of JComponent.WHEN_FOCUSED, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, JComponent.WHEN_IN_FOCUSED_WINDOW. Default: JComponent.WHEN_FOCUSED
+	 * @return 
+	 */
+	public InputMap getInputMap(int condition) {
+		return keybindingPanel.getInputMap(condition);
+	}
+	
+	public ActionMap getActionMap() {
+		return keybindingPanel.getActionMap();
+	}
+	//how to use keybindings:
+	/*InputMap inputMap = keybindingPanel.getInputMap(JComponent.WHEN_FOCUSED);
+	inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Pressed.UP"); //"Pressed.UP" string is arbitrary that links input to action, make it descriptive
+
+	ActionMap actionMap = keybindingPanel.getActionMap();
+	actionMap.put("Pressed.UP", new AbstractAction() { //You can create a class that extends AbstractAction or use anonymous class like here.
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("tuli");
+		}
+	});*/
 }
