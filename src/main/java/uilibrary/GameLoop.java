@@ -9,8 +9,8 @@ package uilibrary;
  * Implement required methods. Update and render will be called back to back fps times a second.
  * Call start() for this object and you are good.
  * Override shutdown() to decide what to do when stopping the loop.
- * You can also override lazyUpdate, which is called every 250ms, to maybe display
- * fps in title etc, or do something else which doesn't happen every update.
+ * You can also override lazyUpdate, which is called every 250ms, to maybe display fps
+ * in title etc, or do something else which doesn't happen every update.
  */
 public abstract class GameLoop implements Runnable {
 	protected final int FPS;

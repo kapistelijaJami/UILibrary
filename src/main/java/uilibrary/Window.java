@@ -58,26 +58,25 @@ public class Window extends JFrame {
 	public Window(int width, int height, String title, boolean resizable, int spawnScreen, boolean fullscreen) {
 		super(title);
 		canvas = new Canvas();
-		canvas.setFocusTraversalKeysEnabled(false);		//disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
-		Toolkit.getDefaultToolkit().setDynamicLayout(false); //resizaa componentit vasta kun ikkunan resize on valmis, ei vilku niin paljoa
+		canvas.setFocusTraversalKeysEnabled(false);				//disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
+		Toolkit.getDefaultToolkit().setDynamicLayout(false);	//resizaa componentit vasta kun ikkunan resize on valmis, ei vilku niin paljoa
 		
-		canvas.setSize(width, height); //laitetaan canvasin koko (ikkunan koko on vähän isompi, kun siinä on reunat) (setVisible ei saa olla setSize ja pack välissä)
+		canvas.setSize(width, height);		//laitetaan canvasin koko (ikkunan koko on vähän isompi, kun siinä on reunat) (setVisible ei saa olla setSize ja pack välissä)
 		super.setMinimumSize(new Dimension(256, 144));
 		
 		setWindowCloseOperation();
 		
-		keybindingPanel = new JPanel(); //JPanel between the window and canvas so you can add keybindings to the panel since it's JComponent.
-        keybindingPanel.setLayout(new BorderLayout());
+		keybindingPanel = new JPanel();		//JPanel between the window and canvas so you can add keybindings to the panel since it's JComponent.
+        keybindingPanel.setLayout(new BorderLayout()); //Resets the layout so it doesn't take up its own space, thus doesn't affect the other layout at all.
 		keybindingPanel.add(canvas);
 		
 		super.setResizable(resizable);		//voiko ikkunaa venyttää, oletus oli true
 		super.setLocationRelativeTo(null);	//ikkuna syntyy näytön keskelle
-		super.add(keybindingPanel);					//lisätään canvas ikkunaan
-		super.pack();						//pakkaa addatut tavarat ikkunaan, ja ikkunasta tulee siten oikean kokoinen
+		super.add(keybindingPanel);			//lisätään canvas ikkunaan
+		super.pack();						//pakkaa addatut tavarat ikkunaan, ja ikkunasta tulee siten oikean kokoinen ja tekee siitä displayable
 		
 		super.setVisible(true);				//laitetaan ikkuna näkyväksi
 		
-		setScreen(spawnScreen);
 		
 		
 		//FULLSCREEN STUFF
@@ -86,9 +85,11 @@ public class Window extends JFrame {
 			//this might not resize everything if all the items are not fully initialized inside the window.
 			//To quarantee it works, call setFullscreen later, or set width and height based on the screen size.
 			//(Might need to call setFullscreen(false) before calling setFullscreen(true))
-			setFullscreen(true);
+			setFullscreen(true, spawnScreen);
 			/*super.setExtendedState(JFrame.MAXIMIZED_BOTH);
 			super.setUndecorated(true);*/
+		} else {
+			setScreen(spawnScreen);
 		}
 		
 		focus();
@@ -171,34 +172,36 @@ public class Window extends JFrame {
 		Rectangle gcBounds = monitor.getDefaultConfiguration().getBounds();
 		
 		Dimension windowSize = super.getSize();
-		Point centerPoint = new Point((int) gcBounds.getCenterX(), (int) gcBounds.getCenterY());
-		int dx = centerPoint.x - windowSize.width / 2;
-		int dy = centerPoint.y - windowSize.height / 2;
 		
+		int dx = gcBounds.x + (gcBounds.width - windowSize.width) / 2;
+		int dy = gcBounds.y + (gcBounds.height - windowSize.height) / 2;
 		
-		// Avoid being placed off the edge of the screen:
-		if (dy + windowSize.height > gcBounds.y + gcBounds.height) { //bottom
-			dy = gcBounds.y + gcBounds.height - windowSize.height;
-		}
-		
-		if (dy < gcBounds.y) { //top
+		if (dy < gcBounds.y) {
 			dy = gcBounds.y;
-		}
-		
-		if (dx + windowSize.width > gcBounds.x + gcBounds.width) { //right
-			dx = gcBounds.x + gcBounds.width - windowSize.width;
-		}
-		
-		if (dx < gcBounds.x) { //left
-			dx = gcBounds.x;
 		}
 		
 		super.setLocation(dx, dy);
 	}
 	
 	public final void setFullscreen(boolean fullscreen) {
+		setFullscreen(fullscreen, 0);
+	}
+	
+	public final void setFullscreen(boolean fullscreen, int screen) {
 		this.fullscreen = fullscreen;
-		GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(fullscreen ? this : null);
+		
+		GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+		GraphicsDevice monitor;
+		
+		if (screen >= 0 && screen < devices.length) {
+			monitor = devices[screen];
+		} else if (devices.length > 0) {
+			monitor = devices[0];
+		} else {
+			throw new RuntimeException("No Screens Found");
+		}
+		
+		monitor.setFullScreenWindow(fullscreen ? this : null);
 		focus();
 	}
 	
