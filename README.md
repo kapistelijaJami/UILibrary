@@ -18,6 +18,8 @@ Create a class for the game/engine that will extend GameLoop.
 It keeps track of the window, updates the game and renders the game into the window.
 
 ```Java
+import uilibrary.GameLoop;
+import uilibrary.Window;
 import java.awt.Graphics2D;
 
 public class Game extends GameLoop {
@@ -38,6 +40,10 @@ public class Game extends GameLoop {
         //You can add mouse- and keyListeners etc. to the canvas with:
         //Canvas canvas = window.getCanvas();
         //canvas.addMouseListener(yourMouseListener);
+		
+		//You can also initialize drag and drop here with:
+		//window.setTransferHandler(new DragAndDrop(this::openFile));
+		//See JavaDoc for DragAndDrop for more information.
     }
     
     @Override
