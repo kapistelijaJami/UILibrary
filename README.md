@@ -40,10 +40,10 @@ public class Game extends GameLoop {
         //You can add mouse- and keyListeners etc. to the canvas with:
         //Canvas canvas = window.getCanvas();
         //canvas.addMouseListener(yourMouseListener);
-		
-		//You can also initialize drag and drop here with:
-		//window.setTransferHandler(new DragAndDrop(this::openFile));
-		//See JavaDoc for DragAndDrop for more information.
+        
+        //You can also initialize drag and drop here with:
+        //window.setTransferHandler(new DragAndDrop(this::openFile));
+        //See JavaDoc for DragAndDrop for more information.
     }
     
     @Override
