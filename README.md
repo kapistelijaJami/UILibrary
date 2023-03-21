@@ -1,7 +1,7 @@
 # UILibrary
 UILibrary is a UI library for java, where you can easily create windows, interactable ui elements and game loops to get your app up and running fast.
 
-You can place buttons, divide the window into panels, or align text however you want relative to some other bounds, and even automatically render the text to multiple lines inside a rectangle, which will be aligned relative to some other bounds.
+You can place buttons, divide the window into panels, or align text however you want relative to some bounds, or automatically wrap the text to multiple lines inside the bounds. See Javadoc for Alignment enum for more information on how to use Alignments, and RenderText and RenderMultilineText for how to render and position text.
 
 ## Usage
 Create a class which contains the main method and will start the loop:
@@ -43,7 +43,7 @@ public class Game extends GameLoop {
         
         //You can also initialize drag and drop here with:
         //window.setTransferHandler(new DragAndDrop(this::openFile));
-        //See JavaDoc for DragAndDrop for more information.
+        //See Javadoc for DragAndDrop for more information.
     }
     
     @Override
@@ -64,4 +64,4 @@ public class Game extends GameLoop {
 
 Now you will have a window with blank screen. You can easily start rendering with the Graphics2D object. Update and render will be called fps times per second (here 60). You can stop the execution of the loop by calling super.stop() inside the Game class.
 
-See the JavaDoc for GameLoop and Window for more information.
+See the Javadoc for GameLoop and Window for more information.

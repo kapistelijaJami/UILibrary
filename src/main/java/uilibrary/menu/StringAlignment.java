@@ -3,7 +3,6 @@ package uilibrary.menu;
 import uilibrary.enums.Alignment;
 import static uilibrary.enums.Alignment.CENTER;
 import java.awt.Color;
-
 import java.awt.Font;
 
 public class StringAlignment {

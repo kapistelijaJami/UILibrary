@@ -27,6 +27,46 @@ public class RenderText {
 		return font;
 	}
 	
+	//MAIN function
+	public static Rectangle drawStringWithAlignment(Graphics2D g, String text, Rectangle rect, Font font, Alignment... aligns) {
+		font = checkIfFontIsNull(font);
+		
+		AffineTransform old = g.getTransform();
+		g.setTransform(new AffineTransform()); //This is here to get the metrics correct while original AT is rotated.
+		
+		FontMetrics metrics = g.getFontMetrics(font);
+		int width = metrics.stringWidth(text);
+		int height = getFontHeight(g, font);
+		int x = rect.x + (rect.width - width) / 2; //These are already centered
+		int y = rect.y + rect.height / 2 + height / 2;
+		
+		for (Alignment align : aligns) {
+			switch (align) {
+				case CENTER:
+					break;
+				case TOP:
+					y = rect.y + getFontHeight(g, font);
+					break;
+				case BOTTOM:
+					y = rect.y + rect.height;
+					break;
+				case LEFT:
+					x = rect.x;
+					break;
+				case RIGHT:
+					x = rect.x + rect.width - metrics.stringWidth(text);
+					break;
+			}
+		}
+		
+		g.setTransform(old);
+		
+		g.setFont(font);
+		g.drawString(text, x, y);
+		
+		return new Rectangle(x, y - height, width, height);
+	}
+	
 	public static void renderText(Graphics2D g, String text, int x, int y, Font font, Color textColor, Color outlineColor, double outlineSize) {
 		FontRenderContext frc = g.getFontRenderContext();
 		g.setColor(textColor);
@@ -96,46 +136,6 @@ public class RenderText {
 		BufferedImage im = numbers.get(n);
 		g.drawImage(im, x, y, null);
 		return im.getWidth();
-	}
-	
-	//MAIN function
-	public static Rectangle drawStringWithAlignment(Graphics2D g, String text, Rectangle rect, Font font, Alignment... aligns) {
-		font = checkIfFontIsNull(font);
-		
-		AffineTransform old = g.getTransform();
-		g.setTransform(new AffineTransform()); //This is here to get the metrics correct while original AT is rotated.
-		
-		FontMetrics metrics = g.getFontMetrics(font);
-		int width = metrics.stringWidth(text);
-		int height = getFontHeight(g, font);
-		int x = rect.x + (rect.width - width) / 2; //These are already centered
-		int y = rect.y + rect.height / 2 + height / 2;
-		
-		for (Alignment align : aligns) {
-			switch (align) {
-				case CENTER:
-					break;
-				case TOP:
-					y = rect.y + getFontHeight(g, font);
-					break;
-				case BOTTOM:
-					y = rect.y + rect.height;
-					break;
-				case LEFT:
-					x = rect.x;
-					break;
-				case RIGHT:
-					x = rect.x + rect.width - metrics.stringWidth(text);
-					break;
-			}
-		}
-		
-		g.setTransform(old);
-		
-		g.setFont(font);
-		g.drawString(text, x, y);
-		
-		return new Rectangle(x, y - height, width, height);
 	}
 	
 	public static int getFontHeight(Font font) {
