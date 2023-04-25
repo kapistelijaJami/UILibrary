@@ -8,6 +8,7 @@ import uilibrary.Window;
 public class Example extends GameLoop {
 	private Window window;
 	private ExampleScene exampleScene;
+	private final String TITLE = "My Title";
 	
 	public static void main(String[] args) {
 		Example example = new Example(60);
@@ -19,7 +20,7 @@ public class Example extends GameLoop {
 		
 		int width = 1280;
 		int height = 720;
-		this.window = new Window(width, height, "My Title");
+		this.window = new Window(width, height, TITLE);
 		window.setCanvasBackground(Color.GRAY);
 	}
 	
@@ -32,6 +33,11 @@ public class Example extends GameLoop {
 		//canvas.addMouseListener(yourMouseListener);
 		
 		exampleScene = new ExampleScene();
+	}
+	
+	@Override
+	protected void lazyUpdate(int fps) {
+		window.setTitle(TITLE + " - " + fps + " fps");
 	}
 	
 	@Override

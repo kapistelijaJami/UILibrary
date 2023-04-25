@@ -12,7 +12,7 @@ import uilibrary.menu.HelperFunctions;
 import uilibrary.menu.Margin;
 
 public class Arrangement implements HasLocation {
-	//private static boolean LOCATIONS_HAVE_CHANGED = false; //TODO: see when you need to use this
+	private static boolean LOCATIONS_HAVE_CHANGED = false; //TODO: see when you need to use this. If you move some reference, then they won't update on their own.
 	
 	private Reference reference; //The reference we are positioning relative to
 	
@@ -21,6 +21,8 @@ public class Arrangement implements HasLocation {
 	private HasSize itself; //The object we are trying to position with this Arrangement
 	
 	private Location latestLocation;
+	private long latestUpdate;
+	private final int minUpdateTime = 1000; //minimum update time in case game didnt update instantly. So it updates the bounds every second no matter what.
 	
 	public Arrangement(HasSize itself) {
 		this.itself = itself;
@@ -130,8 +132,12 @@ public class Arrangement implements HasLocation {
 	
 	@Override
 	public Location getLocation() {
-		if (latestLocation == null/* || Arrangement.LOCATIONS_HAVE_CHANGED*/) { //TODO: see if you need timer based update as well
+		if (latestLocation == null || Arrangement.LOCATIONS_HAVE_CHANGED) { //TODO: see if you need timer based update as well
 			updateLocation();
+		}
+		
+		if (System.currentTimeMillis() - latestUpdate > 300) { //if 300ms has passed we can stop updating
+			Arrangement.LOCATIONS_HAVE_CHANGED = false;
 		}
 		
 		return latestLocation;
@@ -148,6 +154,14 @@ public class Arrangement implements HasLocation {
 		int yOffset = HelperFunctions.getYOffsetFromAlignment(yBounds.getSize(), itself.getHeight(), margin, vertical, reference.getTypeVertical(aligns.isFirst(vertical)));
 		
 		latestLocation = new Location(xBounds.x + xOffset, yBounds.y + yOffset);
-		//latestUpdate = System.currentTimeMillis();
+		
+		if (!Arrangement.LOCATIONS_HAVE_CHANGED) {
+			latestUpdate = System.currentTimeMillis();
+		}
+		Arrangement.LOCATIONS_HAVE_CHANGED = true;
+	}
+
+	public Alignment[] getAligns() {
+		return aligns.asArray();
 	}
 }

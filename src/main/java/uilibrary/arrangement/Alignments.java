@@ -65,4 +65,8 @@ public class Alignments {
 			first = align; //Will replace first if both are CENTER
 		}
 	}
+
+	public Alignment[] asArray() {
+		return new Alignment[] {first, second};
+	}
 }
