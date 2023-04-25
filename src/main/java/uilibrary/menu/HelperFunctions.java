@@ -73,19 +73,19 @@ public class HelperFunctions {
 		if (type == ReferenceType.INSIDE) {
 			switch (align) {
 				case LEFT:
-					return margin.x;
+					return margin.getX();
 				case RIGHT:
-					return reference.width - width - margin.x;
+					return reference.width - width - margin.getX();
 			}
 		} else {
 			switch (align) {
 				case LEFT:
-					return reference.width + margin.x;
+					return 0 - width - margin.getX();
 				case RIGHT:
-					return 0 - width - margin.x;
+					return reference.width + margin.getX();
 			}
 		}
-		return reference.width / 2 - width / 2 + margin.x;
+		return reference.width / 2 - width / 2 + margin.getX();
 	}
 	
 	
@@ -107,18 +107,18 @@ public class HelperFunctions {
 		if (type == ReferenceType.INSIDE) {
 			switch (align) {
 				case TOP:
-					return margin.y;
+					return margin.getY();
 				case BOTTOM:
-					return reference.height - height - margin.y;
+					return reference.height - height - margin.getY();
 			}
 		} else {
 			switch (align) {
 				case TOP:
-					return reference.height + margin.y;
+					return 0 - height - margin.getY();
 				case BOTTOM:
-					return 0 - height - margin.y;
+					return reference.height + margin.getY();
 			}
 		}
-		return reference.height / 2 - height / 2 + margin.y;
+		return reference.height / 2 - height / 2 + margin.getY();
 	}
 }

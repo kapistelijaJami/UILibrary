@@ -128,9 +128,22 @@ public class Window extends JFrame {
 		return canvas.getHeight();
 	}
 	
+	/**
+	 * Sets the background color for the canvas.
+	 * @param color 
+	 */
 	public void setCanvasBackground(Color color) {
 		background = color;
 	}
+	
+	/**
+	 * Use setCanvasBackground() to set the background color.
+	 * @param color
+	 * @deprecated
+	 */
+	@Deprecated
+	@Override
+	public void setBackground(Color color) {}
 	
 	/**
 	 * Returns the bounds of the canvas with location relative to the monitor,

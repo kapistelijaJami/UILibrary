@@ -53,30 +53,6 @@ public enum Alignment {
 		return this == TOP || this == BOTTOM;
 	}
 	
-	public Orientation getOrientationByOther(Alignment other, boolean currentIsFirst) {
-		if (this == CENTER && other == CENTER) {
-			if (currentIsFirst) {
-				return Orientation.HORIZONTAL;
-			} else {
-				return Orientation.VERTICAL;
-			}
-		}
-		
-		if (this == CENTER) {
-			if (other.isHorizontal()) {
-				return Orientation.VERTICAL;
-			} else {
-				return Orientation.HORIZONTAL;
-			}
-		}
-		
-		if (this.isHorizontal()) {
-			return Orientation.HORIZONTAL;
-		} else {
-			return Orientation.VERTICAL;
-		}
-	}
-	
 	public static Alignment getHorizontal(Alignment[] aligns) {
 		Alignment a = CENTER;
 		for (Alignment align : aligns) {
@@ -108,5 +84,36 @@ public enum Alignment {
 		Alignment other = first ? aligns[1] : aligns[0];
 		
 		return current.getOrientationByOther(other, first);
+	}
+	
+	/**
+	 * If current Alignment is CENTER, then you have to see which orientation the other one is to know which one current is.
+	 * If both are CENTER, then the first one will get horizontal, and second vertical. Otherwise it doesn't matter, but both orientations have to be used once.
+	 * @param other
+	 * @param currentIsFirst
+	 * @return 
+	 */
+	private Orientation getOrientationByOther(Alignment other, boolean currentIsFirst) {
+		if (this == CENTER && other == CENTER) {
+			if (currentIsFirst) {
+				return Orientation.HORIZONTAL;
+			} else {
+				return Orientation.VERTICAL;
+			}
+		}
+		
+		if (this == CENTER) {
+			if (other.isHorizontal()) {
+				return Orientation.VERTICAL;
+			} else {
+				return Orientation.HORIZONTAL;
+			}
+		}
+		
+		if (this.isHorizontal()) {
+			return Orientation.HORIZONTAL;
+		} else {
+			return Orientation.VERTICAL;
+		}
 	}
 }

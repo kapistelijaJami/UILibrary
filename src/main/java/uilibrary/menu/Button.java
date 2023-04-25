@@ -9,13 +9,14 @@ import java.util.ArrayList;
 
 import java.awt.BasicStroke;
 import java.awt.RenderingHints;
+import uilibrary.interfaces.HasBounds;
 
 /*
 Different callback function types:
 	Supplier       ()    -> x
 	Consumer       x     -> ()
 	BiConsumer     x, y  -> ()
-	Callable       ()    -> x	- throws ex
+	Callable       ()    -> x	- throws exception
 	Runnable       ()    -> ()
 	Function       x     -> y
 	BiFunction     x,y   -> z
@@ -25,7 +26,7 @@ Different callback function types:
 
 This is why button uses Runnable.
 */
-public class Button {
+public class Button implements HasBounds {
 	protected boolean isMouseOver = false;
 	protected int x;
 	protected int y;
@@ -101,16 +102,14 @@ public class Button {
 		this.isMouseOver = isMouseOver;
 	}
 
+	@Override
 	public int getWidth() {
 		return width;
 	}
 
+	@Override
 	public int getHeight() {
 		return height;
-	}
-	
-	public Rectangle getBounds() {
-		return new Rectangle(x, y, width, height);
 	}
 	
 	public void setHoverAction(Runnable action) {
@@ -135,17 +134,46 @@ public class Button {
 		return false;
 	}
 	
-	public boolean isInside(int x, int y) {
-		return x >= this.x && x <= this.x + width && y >= this.y && y <= this.y + height;
+	/**
+	 * Force a click if active.
+	 * @return 
+	 */
+	public boolean click() {
+		return click(0, 0, true);
 	}
 	
-	public void click() {
+	/**
+	 * Clicks the button if x and y are inside it and the button is active.
+	 * @param x
+	 * @param y
+	 * @return 
+	 */
+	public boolean click(int x, int y) {
+		return click(x, y, false);
+	}
+	
+	/**
+	 * Clicks the button if x and y are inside it, and it is active.
+	 * If forceClick is true, it doesn't check for location.
+	 * @param x X location of the click.
+	 * @param y Y location of the click.
+	 * @param forceClick If true, it doesn't check for location.
+	 * @return 
+	 */
+	private boolean click(int x, int y, boolean forceClick) {
 		if (inactive) {
-			return;
+			return false;
 		}
+		
+		if (!forceClick && !isInside(x, y)) {
+			return false;
+		}
+		
 		if (action != null) {
 			action.run();
 		}
+		
+		return true;
 	}
 	
 	public void update() {}
@@ -210,10 +238,12 @@ public class Button {
 		this.y = y;
 	}
 	
+	@Override
 	public int getX() {
 		return x;
 	}
 	
+	@Override
 	public int getY() {
 		return y;
 	}

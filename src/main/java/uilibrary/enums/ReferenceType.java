@@ -1,5 +1,5 @@
 package uilibrary.enums;
 
 public enum ReferenceType {
-	INSIDE, OUTSIDE;
+	INSIDE, OUTSIDE, OUTSIDE_CORNER;
 }

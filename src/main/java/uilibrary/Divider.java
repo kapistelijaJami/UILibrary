@@ -38,7 +38,7 @@ public class Divider extends Panel {
 	}
 	
 	public Divider(int value, int thickness, int firstMinSpace, int secondMinSpace, Panel first, Panel second, DividerOrientation dir) {
-		super(0, 0);
+		super(0, 0); //Doesn't have x, y, width or height. Calculates them in getBounds() every time.
 		
 		this.value = value;
 		this.thickness = thickness;
@@ -84,7 +84,7 @@ public class Divider extends Panel {
 	@Override
 	public void render(Graphics2D g) {
 		g.setColor(Color.BLACK);
-		Rectangle rect = getHitbox();
+		Rectangle rect = getBounds();
 		g.fillRect(rect.x, rect.y, rect.width, rect.height);
 	}
 	
@@ -136,7 +136,8 @@ public class Divider extends Panel {
 		}
 	}
 	
-	public Rectangle getHitbox() {
+	@Override
+	public Rectangle getBounds() { //Is the bounds of the divider itself, the area that you can hover and click if it's movable. Not the total size of panels it divides.
 		Rectangle rect = new Rectangle();
 		switch (dir) {
 			case HORIZONTAL:
@@ -153,10 +154,6 @@ public class Divider extends Panel {
 				break;
 		}
 		return rect;
-	}
-	
-	public boolean isInside(int x, int y) {
-		return getHitbox().contains(x, y);
 	}
 	
 	private void calculateNewValueFromCoordinates(int x, int y) {

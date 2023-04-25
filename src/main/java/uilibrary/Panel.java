@@ -1,11 +1,11 @@
 package uilibrary;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import uilibrary.enums.DividerOrientation;
 import uilibrary.enums.DividerOrientation.ScalingDirection;
+import uilibrary.interfaces.HasBounds;
 
-public abstract class Panel {
+public abstract class Panel implements HasBounds {
 	protected int x, y;
 	protected int width, height;
 	
@@ -21,15 +21,19 @@ public abstract class Panel {
 	}
 	
 	//override these when implementation differs
+	@Override
 	public int getWidth() {
 		return width;
 	}
+	@Override
 	public int getHeight() {
 		return height;
 	}
+	@Override
 	public int getX() {
 		return x;
 	}
+	@Override
 	public int getY() {
 		return y;
 	}
@@ -44,9 +48,6 @@ public abstract class Panel {
 	}
 	public void setHeight(int height) {
 		this.height = height;
-	}
-	public Rectangle getBounds() {
-		return new Rectangle(x, y, width, height);
 	}
 	
 	public void update() {}
