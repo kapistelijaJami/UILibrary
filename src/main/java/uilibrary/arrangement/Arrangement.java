@@ -12,7 +12,7 @@ import uilibrary.menu.HelperFunctions;
 import uilibrary.menu.Margin;
 
 public class Arrangement implements HasLocation {
-	private static boolean LOCATIONS_HAVE_CHANGED = false; //TODO: see when you need to use this. If you move some reference, then they won't update on their own.
+	private static boolean LOCATIONS_HAVE_CHANGED = false; //TODO: see when you need to use this. If you move some reference or their size, then they won't update on their own.
 	
 	private Reference reference; //The reference we are positioning relative to
 	
@@ -22,7 +22,7 @@ public class Arrangement implements HasLocation {
 	
 	private Location latestLocation;
 	private long latestUpdate;
-	private final int minUpdateTime = 1000; //minimum update time in case game didnt update instantly. So it updates the bounds every second no matter what.
+	private final int minUpdateTime = 1000; //minimum update time in case game didnt update instantly. So it updates the bounds every second no matter what. //TODO: see if needed
 	
 	public Arrangement(HasSize itself) {
 		this.itself = itself;
@@ -163,5 +163,9 @@ public class Arrangement implements HasLocation {
 
 	public Alignment[] getAligns() {
 		return aligns.asArray();
+	}
+
+	public Margin getMargin() {
+		return margin;
 	}
 }

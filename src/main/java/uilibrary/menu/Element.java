@@ -1,6 +1,8 @@
-package uilibrary.arrangement;
+package uilibrary.menu;
 
 import java.awt.Graphics2D;
+import uilibrary.arrangement.Arrangement;
+import uilibrary.enums.ReferenceType;
 import uilibrary.interfaces.HasBounds;
 
 public abstract class Element implements HasBounds {
@@ -16,6 +18,14 @@ public abstract class Element implements HasBounds {
 	
 	public Arrangement arrange() {
 		return arrangement;
+	}
+	
+	public Arrangement arrange(int x, int y) {
+		return arrangement.setReference(x, y);
+	}
+	
+	public Arrangement arrange(HasBounds reference, ReferenceType type) {
+		return arrangement.setReference(reference, type);
 	}
 	
 	@Override

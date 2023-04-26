@@ -2,7 +2,7 @@ package uilibrary.example;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import uilibrary.arrangement.Element;
+import uilibrary.menu.Element;
 
 public class Box extends Element {
 	private Color color;

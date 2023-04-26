@@ -26,12 +26,8 @@ Different callback function types:
 
 This is why button uses Runnable.
 */
-public class Button implements HasBounds {
+public class Button extends InteractableElement {
 	protected boolean isMouseOver = false;
-	protected int x;
-	protected int y;
-	protected int width;
-	protected int height;
 	protected boolean selected = false;
 	protected boolean inactive = false;
 	
@@ -47,15 +43,12 @@ public class Button implements HasBounds {
 	protected Runnable action;
 	protected Runnable hoverAction = null;
 	
-	public Button(int x, int y, int width, int height, Color color) {
-		this(x, y, width, height, color, null);
+	public Button(int width, int height, Color color) {
+		this(width, height, color, null);
 	}
 	
-	public Button(int x, int y, int width, int height, Color color, Runnable action) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
+	public Button(int width, int height, Color color, Runnable action) {
+		super(width, height);
 		this.color = color;
 		this.action = action;
 		
@@ -116,6 +109,7 @@ public class Button implements HasBounds {
 		this.hoverAction = action;
 	}
 	
+	@Override
 	public boolean hover(int x, int y) {
 		if (inactive) {
 			return false;
@@ -148,6 +142,7 @@ public class Button implements HasBounds {
 	 * @param y
 	 * @return 
 	 */
+	@Override
 	public boolean click(int x, int y) {
 		return click(x, y, false);
 	}
@@ -178,6 +173,7 @@ public class Button implements HasBounds {
 	
 	public void update() {}
 	
+	@Override
 	public void render(Graphics2D g) {
 		render(g, inactive);
 	}
@@ -194,13 +190,13 @@ public class Button implements HasBounds {
 	public void renderBox(Graphics2D g, boolean highlighted, boolean inactive) {
 		if (inactive) {
 			g.setColor(Color.decode("#747474"));
-			g.fillRect(x, y, width, height);
+			g.fillRect(getX(), getY(), width, height);
 		} else if (highlighted) {
 			g.setColor(highlightedColor);
-			g.fillRect(x, y, width, height);
+			g.fillRect(getX(), getY(), width, height);
 		} else {
 			g.setColor(color);
-			g.fillRect(x, y, width, height);
+			g.fillRect(getX(), getY(), width, height);
 		}
 		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -208,12 +204,12 @@ public class Button implements HasBounds {
 			g.setColor(selectedColor);
 			int thickness = 2;
 			g.setStroke(new BasicStroke(thickness));
-			g.drawRect(x + thickness / 2, y + thickness / 2, width - thickness, height - thickness);
+			g.drawRect(getX() + thickness / 2, getY() + thickness / 2, width - thickness, height - thickness);
 		} else if (edgeColor != null) {
 			g.setColor(edgeColor);
 			int thickness = 2;
 			g.setStroke(new BasicStroke(thickness));
-			g.drawRect(x + thickness / 2, y + thickness / 2, width - thickness, height - thickness);
+			g.drawRect(getX() + thickness / 2, getY() + thickness / 2, width - thickness, height - thickness);
 		}
 		
 		Window.setGraphicsRenderingHints(g);
@@ -226,26 +222,8 @@ public class Button implements HasBounds {
 			if (!inactive) {
 				g.setColor(sa.getColor());
 			}
-			RenderText.drawStringWithAlignment(g, sa.getText(), new Rectangle(x + textPadding, y + textPadding, width - textPadding * 2, height - textPadding * 2), sa.getFont(), sa.getAlign(), sa.getAlign2());
+			RenderText.drawStringWithAlignment(g, sa.getText(), new Rectangle(getX() + textPadding, getY() + textPadding, width - textPadding * 2, height - textPadding * 2), sa.getFont(), sa.getAlign(), sa.getAlign2());
 		}
-	}
-	
-	public void setX(int x) {
-		this.x = x;
-	}
-	
-	public void setY(int y) {
-		this.y = y;
-	}
-	
-	@Override
-	public int getX() {
-		return x;
-	}
-	
-	@Override
-	public int getY() {
-		return y;
 	}
 	
 	public boolean isSelected() {

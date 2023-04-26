@@ -1,11 +1,14 @@
 package uilibrary.arrangement;
 
+import uilibrary.menu.Element;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import uilibrary.RenderMultilineText;
 import uilibrary.RenderText;
+import uilibrary.menu.Margin;
 
 public class StringArrangement extends Element {
 	private String text;
@@ -62,10 +65,18 @@ public class StringArrangement extends Element {
 	@Override
 	public void render(Graphics2D g) {
 		g.setColor(color);
+		Rectangle bounds = getBounds();
 		if (multiline) {
-			RenderMultilineText.drawMultilineText(g, text, font, getBounds(), true, arrangement.getAligns());
+			//Margin works differently in multiline StringArrangement.
+			//It shrinks the bounds the text will be fit inside,
+			//so that the margin is how much space there is between the edge,
+			//and you can just have the parent element as bounds.
+			Margin margin = arrangement.getMargin();
+			bounds.width -= margin.getX() * 2;
+			bounds.height -= margin.getY() * 2;
+			RenderMultilineText.drawMultilineText(g, text, bounds, font, true, arrangement.getAligns());
 		} else {
-			RenderText.drawStringWithAlignment(g, text, getBounds(), font, arrangement.getAligns());
+			RenderText.drawStringWithAlignment(g, text, bounds, font, arrangement.getAligns());
 		}
 	}
 	

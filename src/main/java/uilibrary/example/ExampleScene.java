@@ -50,10 +50,10 @@ public class ExampleScene {
 		
 		
 		StringArrangement redBoxText = new StringArrangement("Text inside red", Color.BLACK);
-		redBoxText.arrange().setReference(redBox).align(BOTTOM).setMargin(0, 5);
+		redBoxText.arrange().setReference(redBox).align(BOTTOM).setMargin(0, 10);
 		texts.add(redBoxText);
 		
-		StringArrangement orangeBoxText = new StringArrangement("Text inside orange, that splits to multiple lines.", orangeBox.getWidth() - 10, orangeBox.getHeight() - 10, Color.BLACK);
+		StringArrangement orangeBoxText = new StringArrangement("Text inside orange, that splits to multiple lines.", orangeBox.getSize(), Color.BLACK);
 		orangeBoxText.setFontSize(15);
 		orangeBoxText.arrange().setReference(orangeBox).align(TOP, LEFT).setMargin(5, 5);
 		texts.add(orangeBoxText);

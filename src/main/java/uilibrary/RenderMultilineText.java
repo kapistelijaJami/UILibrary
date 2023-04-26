@@ -36,9 +36,9 @@ public class RenderMultilineText extends RenderText {
 		}
 	}
 	
-	public static Rectangle drawMultilineText(Graphics2D g, String allTexts, Font font, Rectangle bounds, boolean overflow, Alignment... aligns) {
+	public static Rectangle drawMultilineText(Graphics2D g, String allTexts, Rectangle bounds, Font font, boolean overflow, Alignment... aligns) {
 		String[] texts = allTexts.split("\n", -1); //limit -1, so empty strings will be included
-		return drawMultilineText(g, texts, font, bounds, overflow, aligns);
+		return drawMultilineText(g, texts, bounds, font, overflow, aligns);
 	}
 	
 	/**
@@ -51,13 +51,13 @@ public class RenderMultilineText extends RenderText {
 	 * @param overflow Determines if the text overflows (is visible) from the bottom of the bounds (true) or is hidden (false).
 	 * @return Returns render area.
 	 */
-	public static Rectangle drawMultilineText(Graphics2D g, String[] texts, Font font, Rectangle bounds, boolean overflow, Alignment... aligns) {
-		return drawMultilineText(g, texts, font, bounds, overflow, TextHorizontalAlign.LEFT, aligns);
+	public static Rectangle drawMultilineText(Graphics2D g, String[] texts, Rectangle bounds, Font font, boolean overflow, Alignment... aligns) {
+		return drawMultilineText(g, texts, bounds, font, overflow, TextHorizontalAlign.LEFT, aligns);
 	}
 	
-	public static Rectangle drawMultilineText(Graphics2D g, String allTexts, Font font, Rectangle bounds, boolean overflow, TextHorizontalAlign horizAlign, Alignment... aligns) {
+	public static Rectangle drawMultilineText(Graphics2D g, String allTexts, Rectangle bounds, Font font, boolean overflow, TextHorizontalAlign horizAlign, Alignment... aligns) {
 		String[] texts = allTexts.split("\n", -1); //limit -1, so empty strings will be included
-		return drawMultilineText(g, texts, font, bounds, overflow, horizAlign, aligns);
+		return drawMultilineText(g, texts, bounds, font, overflow, horizAlign, aligns);
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public class RenderMultilineText extends RenderText {
 	 * @param aligns
 	 * @return Returns render area.
 	 */
-	public static Rectangle drawMultilineText(Graphics2D g, String[] texts, Font font, Rectangle bounds, boolean overflow, TextHorizontalAlign horizAlign, Alignment... aligns) {
+	public static Rectangle drawMultilineText(Graphics2D g, String[] texts, Rectangle bounds, Font font, boolean overflow, TextHorizontalAlign horizAlign, Alignment... aligns) {
 		font = checkIfFontIsNull(font);
 		g.setFont(font);
 		
