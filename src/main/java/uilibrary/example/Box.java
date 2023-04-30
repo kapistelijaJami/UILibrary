@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import uilibrary.menu.Element;
 
 public class Box extends Element {
-	private Color color;
+	private final Color color;
 	
 	public Box(int width, int height, Color color) {
 		super(width, height);
@@ -17,5 +17,9 @@ public class Box extends Element {
 	public void render(Graphics2D g) {
 		g.setColor(color);
 		g.fillRect(getX(), getY(), width, height);
+	}
+	
+	public Color getColor() {
+		return color;
 	}
 }

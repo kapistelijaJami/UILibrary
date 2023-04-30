@@ -4,7 +4,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import uilibrary.interfaces.HasSize;
 
-public class Margin { //TODO: Margin should work better. Now it's basically just an offset. Better would be if it doesn't do anything when CENTER unless the reference edge is inside the margin area.
+public class Margin {
 	private int x, y;
 	
 	private HasSize itself; //The object this margin affects
@@ -19,7 +19,7 @@ public class Margin { //TODO: Margin should work better. Now it's basically just
 	public Margin(int both) {
 		this(both, both);
 	}
-
+	
 	public Margin(int x, int y) {
 		this.x = x;
 		this.y = y;

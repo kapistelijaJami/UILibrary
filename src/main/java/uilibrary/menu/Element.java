@@ -28,6 +28,10 @@ public abstract class Element implements HasBounds {
 		return arrangement.setReference(reference, type);
 	}
 	
+	public Arrangement arrange(HasBounds horizontal, ReferenceType horType, HasBounds vertical, ReferenceType verType) {
+		return arrangement.setReference(horizontal, horType, vertical, verType);
+	}
+	
 	@Override
 	public int getX() {
 		return arrangement.getX();
@@ -46,6 +50,16 @@ public abstract class Element implements HasBounds {
 	@Override
 	public int getHeight() {
 		return height;
+	}
+	
+	public void setWidth(int width) {
+		this.width = width;
+		arrangement.updateLocation(true); //must force update on other objects
+	}
+	
+	public void setHeight(int height) {
+		this.height = height;
+		arrangement.updateLocation(true); //must force update on other objects
 	}
 	
 	public abstract void render(Graphics2D g);

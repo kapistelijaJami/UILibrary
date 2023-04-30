@@ -1,15 +1,14 @@
 package uilibrary.menu;
 
-import uilibrary.RenderText;
 import uilibrary.Window;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import java.awt.BasicStroke;
 import java.awt.RenderingHints;
-import uilibrary.interfaces.HasBounds;
+import uilibrary.arrangement.StringArrangement;
+import uilibrary.enums.ReferenceType;
 
 /*
 Different callback function types:
@@ -36,9 +35,9 @@ public class Button extends InteractableElement {
 	protected Color highlightedColor;
 	protected Color edgeColor = null;
 	
-	protected int textPadding = 5;
+	protected int textPadding = 5; //TODO: now this is not used.
 	
-	protected ArrayList<StringAlignment> texts = new ArrayList<>();
+	protected ArrayList<StringArrangement> texts = new ArrayList<>();
 	
 	protected Runnable action;
 	protected Runnable hoverAction = null;
@@ -71,15 +70,17 @@ public class Button extends InteractableElement {
 		edgeColor = color;
 	}
 	
-	public void addStringAlignment(StringAlignment s) {
-		this.texts.add(s);
+	public void addStringArrangement(StringArrangement s) {
+		s.arrange(this, ReferenceType.INSIDE);
+		texts.add(s);
 	}
 	
-	public void setStringAlignment(StringAlignment s) {
+	public void setStringArrangement(StringArrangement s) {
+		s.arrange(this, ReferenceType.INSIDE);
 		if (texts.isEmpty()) {
 			texts.add(s);
 		} else {
-			this.texts.set(0, s);
+			texts.set(0, s);
 		}
 	}
 	
@@ -185,8 +186,6 @@ public class Button extends InteractableElement {
 		renderTexts(g, inactive);
 	}
 	
-	public void render(Graphics2D g, int x, int y) {}
-	
 	public void renderBox(Graphics2D g, boolean highlighted, boolean inactive) {
 		if (inactive) {
 			g.setColor(Color.decode("#747474"));
@@ -218,11 +217,14 @@ public class Button extends InteractableElement {
 	public void renderTexts(Graphics2D g, boolean inactive) {
 		g.setColor(HelperFunctions.getDarkerColor(Color.decode("#747474"), 70));
 		
-		for (StringAlignment sa : texts) {
+		for (StringArrangement sa : texts) {
 			if (!inactive) {
 				g.setColor(sa.getColor());
 			}
-			RenderText.drawStringWithAlignment(g, sa.getText(), new Rectangle(getX() + textPadding, getY() + textPadding, width - textPadding * 2, height - textPadding * 2), sa.getFont(), sa.getAlign(), sa.getAlign2());
+			
+			sa.render(g);
+			
+			//RenderText.drawStringWithAlignment(g, sa.getText(), new Rectangle(getX() + textPadding, getY() + textPadding, width - textPadding * 2, height - textPadding * 2), sa.getFont(), sa.getAlign(), sa.getAlign2());
 		}
 	}
 	

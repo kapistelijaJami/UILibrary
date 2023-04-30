@@ -14,6 +14,7 @@ public class StringArrangement extends Element {
 	private String text;
 	private Color color;
 	private boolean multiline = false;
+	private boolean overflow = true;
 	private Font font;
 	public static Font defaultFont = new Font("Serif", Font.BOLD, 20);
 	
@@ -62,6 +63,10 @@ public class StringArrangement extends Element {
 		font = font.deriveFont(size);
 	}
 	
+	public void setOverflow(boolean b) {
+		this.overflow = b;
+	}
+	
 	@Override
 	public void render(Graphics2D g) {
 		g.setColor(color);
@@ -74,7 +79,7 @@ public class StringArrangement extends Element {
 			Margin margin = arrangement.getMargin();
 			bounds.width -= margin.getX() * 2;
 			bounds.height -= margin.getY() * 2;
-			RenderMultilineText.drawMultilineText(g, text, bounds, font, true, arrangement.getAligns());
+			RenderMultilineText.drawMultilineText(g, text, bounds, font, overflow, arrangement.getAligns());
 		} else {
 			RenderText.drawStringWithAlignment(g, text, bounds, font, arrangement.getAligns());
 		}
