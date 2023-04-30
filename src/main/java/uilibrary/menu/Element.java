@@ -7,7 +7,7 @@ import uilibrary.interfaces.HasBounds;
 
 public abstract class Element implements HasBounds {
 	protected int width, height;
-	protected Arrangement arrangement;
+	private Arrangement arrangement;
 	
 	public Element(int width, int height) {
 		this.width = width;
