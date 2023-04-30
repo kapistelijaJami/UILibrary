@@ -71,6 +71,7 @@ public class StringArrangement extends Element {
 	public void render(Graphics2D g) {
 		g.setColor(color);
 		Rectangle bounds = getBounds();
+		Arrangement arrangement = getArrangement();
 		if (multiline) {
 			//Margin works differently in multiline StringArrangement.
 			//It shrinks the bounds the text will be fit inside,

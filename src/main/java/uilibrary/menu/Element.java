@@ -32,6 +32,11 @@ public abstract class Element implements HasBounds {
 		return arrangement.setReference(horizontal, horType, vertical, verType);
 	}
 	
+	//Another method to get Arrangement more semantically matching the situation better in some cases.
+	public Arrangement getArrangement() {
+		return arrange();
+	}
+	
 	@Override
 	public int getX() {
 		return arrangement.getX();
