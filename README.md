@@ -115,6 +115,9 @@ public class ExampleScene {
         //You can position elements very easily relative to each other however you want.
         //Here are couple examples:
         
+        
+        //Absolute positioning:
+        
         //Green box of size 300x200, positioned relative to an absolute reference, the point (50, 20).
         //And aligned top left, which means the top left corner of the box touches the point.
         Box greenBox = new Box(300, 200, Color.GREEN);
@@ -137,6 +140,9 @@ public class ExampleScene {
         //of Element class with the location, which will automatically align it top left.
         //So top left corner will be at point (120, 450).
         boxes.add(new Box(120, 450, 30, 30, Color.MAGENTA));
+        
+        
+        //Relative positioning:
         
         //Blue box of size 100x100. This example uses two references, one for horizontal, and one for vertical.
         //Positioned relative to the red box horizontally, and to the green box vertically.
