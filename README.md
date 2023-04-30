@@ -114,7 +114,7 @@ public class ExampleScene {
         //Red box of size 200x200. Also absolute position, same way relative to point (280, 300).
         //Just a shorter way of specifying the absolute location.
         //You can also set the absolute reference coordinates in the arrange()
-		//method as well for an even shorter way.
+        //method as well for an even shorter way.
         Box redBox = new Box(200, 200, Color.RED);
         redBox.arrange().setReference(280, 300).align(TOP, LEFT);
         boxes.add(redBox);
@@ -178,7 +178,7 @@ public class ExampleScene {
         //Default ReferenceType is INSIDE, and it's aligned top left with a margin of 5 to both directions.
         //It will fit inside the orange box, but will overflow from below if there are too many characters,
         //unless you use setOverflow(false) -method to disable overflow, which won't render
-		//the rest that are outside of the bounds.
+        //the rest that are outside of the bounds.
         StringArrangement orangeBoxText = new StringArrangement("Text inside orange, that splits to multiple lines.", orangeBox.getSize(), Color.BLACK);
         orangeBoxText.setFontSize(15);
         orangeBoxText.arrange().setReference(orangeBox).align(TOP, LEFT).setMargin(5, 5);
@@ -187,11 +187,11 @@ public class ExampleScene {
     
     public void render(Graphics2D g) {
         for (Box box : boxes) {
-        	box.render(g);
+            box.render(g);
         }
         
         for (StringArrangement text : texts) {
-        	text.render(g);
+            text.render(g);
         }
     }
 }
