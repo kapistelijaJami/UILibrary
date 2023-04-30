@@ -1,4 +1,4 @@
-package uilibrary.elements.util;
+package uilibrary.util;
 
 import java.util.function.Consumer;
 

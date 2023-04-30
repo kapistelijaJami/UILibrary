@@ -88,6 +88,12 @@ public class Box extends Element {
         this.color = color;
     }
     
+    public Box(int x, int y, int width, int height, Color color) {
+        super(x, y, width, height);
+        
+        this.color = color;
+    }
+    
     @Override
     public void render(Graphics2D g) {
         g.setColor(color);
@@ -103,7 +109,7 @@ In this example we will render multiple Boxes that are positioned relative to ea
 ```Java
 public class ExampleScene {
     private ArrayList<Box> boxes = new ArrayList<>();
-    private ArrayList<StringArrangement> texts = new ArrayList<>();
+    private ArrayList<TextElement> texts = new ArrayList<>();
     
     public ExampleScene() {
         //You can position elements very easily relative to each other however you want.
@@ -117,11 +123,20 @@ public class ExampleScene {
         
         //Red box of size 200x200. Also absolute position, same way relative to point (280, 300).
         //Just a shorter way of specifying the absolute location.
-        //You can also set the absolute reference coordinates in the arrange()
-        //method as well for an even shorter way.
         Box redBox = new Box(200, 200, Color.RED);
         redBox.arrange().setReference(280, 300).align(TOP, LEFT);
         boxes.add(redBox);
+        
+        //White box of size 30x30. Even shorter way to specify the location.
+        //Top left corner will be at point (60, 450).
+        Box whiteBox = new Box(30, 30, Color.RED);
+        whiteBox.arrange(60, 450).align(TOP, LEFT);
+        boxes.add(whiteBox);
+        
+        //Magenta box of size 30x30. Uses another constructor that calls the constructor
+        //of Element class with the location, which will automatically align it top left.
+        //So top left corner will be at point (120, 450).
+        boxes.add(new Box(120, 450, 30, 30, Color.MAGENTA));
         
         //Blue box of size 100x100. This example uses two references, one for horizontal, and one for vertical.
         //Positioned relative to the red box horizontally, and to the green box vertically.
@@ -173,7 +188,7 @@ public class ExampleScene {
         //This creates a text element and places it same way relative to the red box.
         //It aligns the text bottom center, and has a vertical margin of 10px.
         //We did not provide this text element a size, which means it will be one line only, no matter how many characters.
-        StringArrangement redBoxText = new StringArrangement("Text inside red", Color.BLACK);
+        TextElement redBoxText = new TextElement("Text inside red", Color.BLACK);
         redBoxText.arrange().setReference(redBox).align(BOTTOM).setMargin(0, 10);
         texts.add(redBoxText);
         
@@ -183,7 +198,7 @@ public class ExampleScene {
         //It will fit inside the orange box, but will overflow from below if there are too many characters,
         //unless you use setOverflow(false) -method to disable overflow, which won't render the rest
         //that are outside of the bounds.
-        StringArrangement orangeBoxText = new StringArrangement("Text inside orange, that splits to multiple lines.", orangeBox.getSize(), Color.BLACK);
+        TextElement orangeBoxText = new TextElement("Text inside orange, that splits to multiple lines.", orangeBox.getSize(), Color.BLACK);
         orangeBoxText.setFontSize(15);
         orangeBoxText.arrange().setReference(orangeBox).align(TOP, LEFT).setMargin(5, 5);
         texts.add(orangeBoxText);
@@ -194,7 +209,7 @@ public class ExampleScene {
             box.render(g);
         }
         
-        for (StringArrangement text : texts) {
+        for (TextElement text : texts) {
             text.render(g);
         }
     }

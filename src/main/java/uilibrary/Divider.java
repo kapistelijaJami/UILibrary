@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import uilibrary.menu.HelperFunctions;
+import uilibrary.util.HelperFunctions;
 
 //TODO: Tee tähän viel sillei, että pystyy pilkkoo useamminkin samaan suuntaan
 //TODO: Divider is Panel, because then you can put a divider to be one of the Panels inside another divider.

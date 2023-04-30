@@ -1,16 +1,15 @@
 package uilibrary.arrangement;
 
-import uilibrary.menu.Element;
+import uilibrary.elements.Element;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import uilibrary.RenderMultilineText;
-import uilibrary.RenderText;
-import uilibrary.menu.Margin;
+import uilibrary.util.RenderMultilineText;
+import uilibrary.util.RenderText;
 
-public class StringArrangement extends Element {
+public class TextElement extends Element {
 	private String text;
 	private Color color;
 	private boolean multiline = false;
@@ -23,33 +22,33 @@ public class StringArrangement extends Element {
 	 * @param text
 	 * @param color
 	 */
-	public StringArrangement(String text, Color color) {
+	public TextElement(String text, Color color) {
 		this(text, 0, 0, color, defaultFont); //No size, will be single line. We'll calculate the size for one line.
 		
 		updateSize();
 		multiline = false;
 	}
 	
-	public StringArrangement(String text, Color color, Font font) {
+	public TextElement(String text, Color color, Font font) {
 		this(text, 0, 0, color, font);
 		
 		updateSize();
 		multiline = false;
 	}
 	
-	public StringArrangement(String text, Dimension size, Color color) {
+	public TextElement(String text, Dimension size, Color color) {
 		this(text, size.width, size.height, color, defaultFont);
 	}
 	
-	public StringArrangement(String text, int width, int height, Color color) {
+	public TextElement(String text, int width, int height, Color color) {
 		this(text, width, height, color, defaultFont);
 	}
 	
-	public StringArrangement(String text, Dimension size, Color color, Font font) {
+	public TextElement(String text, Dimension size, Color color, Font font) {
 		this(text, size.width, size.height, color, font);
 	}
 	
-	public StringArrangement(String text, int width, int height, Color color, Font font) {
+	public TextElement(String text, int width, int height, Color color, Font font) {
 		super(width, height);
 		
 		this.text = text;
@@ -73,6 +72,7 @@ public class StringArrangement extends Element {
 		Rectangle bounds = getBounds();
 		Arrangement arrangement = getArrangement();
 		if (multiline) {
+			//TODO: maybe add text padding and let margin be normal.
 			//Margin works differently in multiline StringArrangement.
 			//It shrinks the bounds the text will be fit inside,
 			//so that the margin is how much space there is between the edge,

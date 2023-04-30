@@ -1,5 +1,6 @@
-package uilibrary.menu;
+package uilibrary.util;
 
+import uilibrary.arrangement.Margin;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;

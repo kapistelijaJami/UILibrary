@@ -1,19 +1,32 @@
-package uilibrary.menu;
+package uilibrary.elements;
 
 import java.awt.Graphics2D;
 import uilibrary.arrangement.Arrangement;
+import static uilibrary.enums.Alignment.*;
 import uilibrary.enums.ReferenceType;
 import uilibrary.interfaces.HasBounds;
 
 public abstract class Element implements HasBounds {
 	protected int width, height;
-	private Arrangement arrangement;
+	private final Arrangement arrangement;
 	
 	public Element(int width, int height) {
 		this.width = width;
 		this.height = height;
 		
 		arrangement = new Arrangement(this);
+	}
+	
+	/**
+	 * Places the object so that top left will touch the x and y coordinates by default.
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height 
+	 */
+	public Element(int x, int y, int width, int height) {
+		this(width, height);
+		arrangement.setReference(x, y).align(TOP, LEFT);
 	}
 	
 	public Arrangement arrange() {
@@ -34,7 +47,7 @@ public abstract class Element implements HasBounds {
 	
 	//Another method to get Arrangement more semantically matching the situation better in some cases.
 	public Arrangement getArrangement() {
-		return arrange();
+		return arrangement;
 	}
 	
 	@Override
@@ -59,12 +72,12 @@ public abstract class Element implements HasBounds {
 	
 	public void setWidth(int width) {
 		this.width = width;
-		arrangement.updateLocation(true); //must force update on other objects
+		arrangement.updateLocation(true); //Have to update location, it might depend on size. Must force update on other objects as well.
 	}
 	
 	public void setHeight(int height) {
 		this.height = height;
-		arrangement.updateLocation(true); //must force update on other objects
+		arrangement.updateLocation(true); //Have to update location, it might depend on size. Must force update on other objects as well.
 	}
 	
 	public abstract void render(Graphics2D g);

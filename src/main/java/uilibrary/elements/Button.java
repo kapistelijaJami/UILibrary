@@ -1,5 +1,6 @@
-package uilibrary.menu;
+package uilibrary.elements;
 
+import uilibrary.util.HelperFunctions;
 import uilibrary.Window;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -7,7 +8,8 @@ import java.util.ArrayList;
 
 import java.awt.BasicStroke;
 import java.awt.RenderingHints;
-import uilibrary.arrangement.StringArrangement;
+import java.util.List;
+import uilibrary.arrangement.TextElement;
 import uilibrary.enums.ReferenceType;
 
 /*
@@ -27,7 +29,6 @@ This is why button uses Runnable.
 */
 public class Button extends InteractableElement {
 	protected boolean isMouseOver = false;
-	protected boolean selected = false;
 	protected boolean inactive = false;
 	
 	protected Color color;
@@ -35,9 +36,9 @@ public class Button extends InteractableElement {
 	protected Color highlightedColor;
 	protected Color edgeColor = null;
 	
-	protected int textPadding = 5; //TODO: now this is not used.
+	protected int textPadding = 5; //TODO: now this is not used. Might want to use padding and let margin be the same as always, which would just move the whole area. Padding could be inside StringArrangement.
 	
-	protected ArrayList<StringArrangement> texts = new ArrayList<>();
+	protected List<TextElement> texts = new ArrayList<>(); //List of texts that will be placed inside the button. First one will be the main text.
 	
 	protected Runnable action;
 	protected Runnable hoverAction = null;
@@ -70,12 +71,12 @@ public class Button extends InteractableElement {
 		edgeColor = color;
 	}
 	
-	public void addStringArrangement(StringArrangement s) {
+	public void addStringArrangement(TextElement s) {
 		s.arrange(this, ReferenceType.INSIDE);
 		texts.add(s);
 	}
 	
-	public void setStringArrangement(StringArrangement s) {
+	public void setStringArrangement(TextElement s) {
 		s.arrange(this, ReferenceType.INSIDE);
 		if (texts.isEmpty()) {
 			texts.add(s);
@@ -86,10 +87,6 @@ public class Button extends InteractableElement {
 	
 	public String getMainText() {
 		return texts.get(0).getText();
-	}
-
-	public void setSelected(boolean selected) {
-		this.selected = selected;
 	}
 	
 	public void setIsMouseOver(boolean isMouseOver) {
@@ -186,7 +183,7 @@ public class Button extends InteractableElement {
 		renderTexts(g, inactive);
 	}
 	
-	public void renderBox(Graphics2D g, boolean highlighted, boolean inactive) {
+	private void renderBox(Graphics2D g, boolean highlighted, boolean inactive) {
 		if (inactive) {
 			g.setColor(Color.decode("#747474"));
 			g.fillRect(getX(), getY(), width, height);
@@ -198,26 +195,27 @@ public class Button extends InteractableElement {
 			g.fillRect(getX(), getY(), width, height);
 		}
 		
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		if (selected) {
-			g.setColor(selectedColor);
-			int thickness = 2;
-			g.setStroke(new BasicStroke(thickness));
-			g.drawRect(getX() + thickness / 2, getY() + thickness / 2, width - thickness, height - thickness);
-		} else if (edgeColor != null) {
+		renderEdge(g);
+	}
+	
+	protected void renderEdge(Graphics2D g) {
+		if (edgeColor != null) {
+			Object oldAntiAlias = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+			
 			g.setColor(edgeColor);
 			int thickness = 2;
 			g.setStroke(new BasicStroke(thickness));
 			g.drawRect(getX() + thickness / 2, getY() + thickness / 2, width - thickness, height - thickness);
+			
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAntiAlias);
 		}
-		
-		Window.setGraphicsRenderingHints(g);
 	}
 	
-	public void renderTexts(Graphics2D g, boolean inactive) {
+	private void renderTexts(Graphics2D g, boolean inactive) {
 		g.setColor(HelperFunctions.getDarkerColor(Color.decode("#747474"), 70));
 		
-		for (StringArrangement sa : texts) {
+		for (TextElement sa : texts) {
 			if (!inactive) {
 				g.setColor(sa.getColor());
 			}
@@ -226,10 +224,6 @@ public class Button extends InteractableElement {
 			
 			//RenderText.drawStringWithAlignment(g, sa.getText(), new Rectangle(getX() + textPadding, getY() + textPadding, width - textPadding * 2, height - textPadding * 2), sa.getFont(), sa.getAlign(), sa.getAlign2());
 		}
-	}
-	
-	public boolean isSelected() {
-		return selected;
 	}
 	
 	public void setInactive(boolean b) {

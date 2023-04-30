@@ -1,4 +1,4 @@
-package uilibrary.elements.util;
+package uilibrary.util;
 
 /**
  * Counts up from start, when it reaches end, it is done.

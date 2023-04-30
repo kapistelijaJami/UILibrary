@@ -1,4 +1,4 @@
-package uilibrary;
+package uilibrary.util;
 
 import uilibrary.enums.Alignment;
 import java.awt.Dimension;
@@ -10,8 +10,8 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import uilibrary.enums.ReferenceType;
-import uilibrary.menu.HelperFunctions;
-import uilibrary.menu.Margin;
+import uilibrary.util.HelperFunctions;
+import uilibrary.arrangement.Margin;
 
 /**
  * Renders text in multiple lines inside bounds.

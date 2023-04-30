@@ -1,4 +1,4 @@
-package uilibrary;
+package uilibrary.util;
 
 import uilibrary.enums.Alignment;
 import java.awt.BasicStroke;
@@ -15,6 +15,7 @@ import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import uilibrary.Window;
 
 
 public class RenderText {

@@ -2,13 +2,19 @@ package uilibrary.example;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import uilibrary.menu.Element;
+import uilibrary.elements.Element;
 
 public class Box extends Element {
 	private final Color color;
 	
 	public Box(int width, int height, Color color) {
 		super(width, height);
+		
+		this.color = color;
+	}
+	
+	public Box(int x, int y, int width, int height, Color color) {
+		super(x, y, width, height);
 		
 		this.color = color;
 	}

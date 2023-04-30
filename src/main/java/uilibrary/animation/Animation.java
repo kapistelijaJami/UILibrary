@@ -14,7 +14,7 @@ public class Animation {
 	private int slowedFrameDelay;				// At what point the frame delay have to cross in order for the animation to completely stop or stay there
 	private boolean slowDownFully;				// If true, the animation will completely stop after frameDelay crosses slowedFrameDelay. If false, frameDelay will stay there.
 	
-	private ArrayList<BufferedImage> frames;    // Arraylist of frames
+	private final ArrayList<BufferedImage> frames;    // Arraylist of frames
 	
 	public Animation(ArrayList<BufferedImage> frames, int frameDelay) {
 		this.frames = frames;
@@ -131,5 +131,9 @@ public class Animation {
 	
 	public void setFrameDelay(int delay) {
 		this.frameDelay = delay;
+	}
+	
+	public void setAnimationDirection(boolean forward) {
+		animationDirection = forward ? 1 : -1;
 	}
 }

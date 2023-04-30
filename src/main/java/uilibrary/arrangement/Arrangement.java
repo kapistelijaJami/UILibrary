@@ -7,8 +7,7 @@ import uilibrary.enums.ReferenceType;
 import uilibrary.interfaces.HasBounds;
 import uilibrary.interfaces.HasLocation;
 import uilibrary.interfaces.HasSize;
-import uilibrary.menu.HelperFunctions;
-import uilibrary.menu.Margin;
+import uilibrary.util.HelperFunctions;
 
 public class Arrangement implements HasLocation {
 	private static long LATEST_LOCATION_UPDATE; //This is the timestamp of when the latest update happened that changed their location. Any Arrangement with smaller latestUpdate will get updated.
