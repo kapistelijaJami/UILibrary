@@ -71,7 +71,7 @@ See the Javadoc for GameLoop and Window for more information.
 
 ## How to position UI elements
 To create UI objects that you can position with this library and use as a reference, the object should extend Element class or InteractableElement for extra hover and click methods.
-The Element class will provide some methods that are used within this library, width and height variables, and an Arrangement object, which contains the information on how to position the Element.
+The Element class will provide some methods that are used within this library, width and height variables, and will use an Arrangement object, which contains the information on how to position the Element.
 You will have to implement render method, and call super() in the constructor with the width and height values.
 
 You can also create Elements that are provided by this library, such as buttons. They will already implement Element class and will be used the same way.
