@@ -1,7 +1,9 @@
 # UILibrary
 UILibrary is a UI library for java, where you can easily create windows, interactable UI elements and game loops to get your app up and running fast.
 
-You can place buttons, divide the window into panels, or align text however you want relative to some bounds, or automatically wrap the text to multiple lines inside the bounds. See Javadoc of Alignment enum for more information on how to use Alignments, and use StringArrangement to render and position text (see RenderText and RenderMultilineText on how the positioning works). Any of your own UI elements should extend Element class, which will provide some methods that are used within this library, width and height variables, and an Arrangement object, which contains the information how to position the Element.
+You can place buttons, divide the window into panels, or align text however you want relative to some bounds, or automatically wrap the text to multiple lines inside the bounds. See Javadoc of Alignment enum for more information on how to use Alignments, and use StringArrangement to render and position text (see RenderText and RenderMultilineText on how the positioning works).
+
+Any of your own UI elements should extend Element class, which will provide some methods that are used within this library, width and height variables, and an Arrangement object, which contains the information how to position the Element.
 
 ## Usage
 Create a class which contains the main method and will start the loop:
@@ -67,10 +69,12 @@ Now you will have a window with blank screen. You can easily start rendering wit
 See the Javadoc for GameLoop and Window for more information.
 
 
-## How to position objects
-To create objects that you can position with this library and use as a reference, the object should extend Element class or InteractableElement for extra hover and click methods.
+## How to position UI elements
+To create UI objects that you can position with this library and use as a reference, the object should extend Element class or InteractableElement for extra hover and click methods.
 The Element class will provide some methods that are used within this library, width and height variables, and an Arrangement object, which contains the information on how to position the Element.
 You will have to implement render method, and call super() in the constructor with the width and height values.
+
+You can also create Elements that are provided by this library, such as buttons. They will already implement Element class and will be used the same way.
 
 Here is an example of a Box object:
 
@@ -177,8 +181,8 @@ public class ExampleScene {
         //The text will be wrapped so that it fits inside this area. It's also placed relative to the orange box.
         //Default ReferenceType is INSIDE, and it's aligned top left with a margin of 5 to both directions.
         //It will fit inside the orange box, but will overflow from below if there are too many characters,
-        //unless you use setOverflow(false) -method to disable overflow, which won't render
-        //the rest that are outside of the bounds.
+        //unless you use setOverflow(false) -method to disable overflow, which won't render the rest
+        //that are outside of the bounds.
         StringArrangement orangeBoxText = new StringArrangement("Text inside orange, that splits to multiple lines.", orangeBox.getSize(), Color.BLACK);
         orangeBoxText.setFontSize(15);
         orangeBoxText.arrange().setReference(orangeBox).align(TOP, LEFT).setMargin(5, 5);
