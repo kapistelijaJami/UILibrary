@@ -215,3 +215,7 @@ public class ExampleScene {
     }
 }
 ```
+
+This is what the ExampleScene will look like:
+
+![ExampleScene](https://github.com/kapistelijaJami/UILibrary/blob/67c780c9652c4fca5c8c21656d04c4aefa573925/images/ExampleScene.png "ExampleScene")
