@@ -15,7 +15,7 @@ public class ExampleScene {
 	
 	public ExampleScene() {
 		//You can position elements very easily relative to each other however you want.
-		//Here are couple examples:
+		//Here are couple examples (all ReferenceTypes and Alignments have been statically imported):
 		
 		//Absolute positioning:
 		
@@ -45,17 +45,8 @@ public class ExampleScene {
 		
 		//Relative positioning:
 		
-		//Blue box of size 100x100. This example uses two references, one for horizontal, and one for vertical.
-		//Positioned relative to the red box horizontally, and to the green box vertically.
-		//It's aligned bottom right and inside both references, which means it will be positioned horizontally
-		//so that right edges of blue and red are touching (the x coordinate of the right edges will match),
-		//and bottom edges of blue and green are touching.
-		Box blueBox = new Box(100, 100, Color.BLUE);
-		blueBox.arrange().setReference(redBox, INSIDE, greenBox, INSIDE).align(RIGHT, BOTTOM);
-		boxes.add(blueBox);
-		
 		//Orange box of size 100x100. It is positioned relative to the green box. It's aligned bottom left, but outside of the reference.
-		//Here the alignment order matters, bottom comes first, which positions the box below the green box, and aligns it so that the left sides are touching.
+		//Here the alignment order matters, bottom comes first, which positions the box below the green box, and aligns it so that the left sides are aligned.
 		//There is also a 20px vertical margin, so it will be 20 pixels below the green box.
 		Box orangeBox = new Box(100, 100, Color.ORANGE);
 		orangeBox.arrange().setReference(greenBox, OUTSIDE).align(BOTTOM, LEFT).setMargin(0, 20);
@@ -67,7 +58,7 @@ public class ExampleScene {
 		pinkBox.arrange().setReference(redBox, INSIDE);
 		boxes.add(pinkBox);
 		
-		//Gray box of size 120x120. It's aligned outside the green box, right hand side.
+		//Gray box of size 120x120. It's aligned outside the green box, right hand side. It will default to center vertically.
 		//But it has a margin, that uses the 'w2' variable, which is the width of the reference. (Here green box width is 300)
 		//And it has a multiplier -0.5. So it will be positioned with the margin of -150.
 		//This effectively puts it right side of the green box and moves it so the left side is at the center of the green box.
@@ -81,6 +72,15 @@ public class ExampleScene {
 		Box cyanBox = new Box(50, 50, Color.CYAN);
 		cyanBox.arrange().setReference(grayBox, INSIDE).setMargin("0.5w", "0.5h");
 		boxes.add(cyanBox);
+		
+		//Blue box of size 100x100. This example uses two references, one for horizontal, and one for vertical.
+		//Positioned relative to the red box horizontally, and to the green box vertically.
+		//It's aligned bottom right and inside both references, which means it will be positioned horizontally
+		//so that right edges of blue and red are touching (the x coordinate of the right edges will match),
+		//and bottom edges of blue and green are touching.
+		Box blueBox = new Box(100, 100, Color.BLUE);
+		blueBox.arrange().setReference(redBox, INSIDE, greenBox, INSIDE).align(RIGHT, BOTTOM);
+		boxes.add(blueBox);
 		
 		//Another red box, this time size 50x50. Placed relative to the blue box.
 		//The ReferenceType is OUTSIDE_CORNER, and aligned top right, which puts it to the top right corner of the blue box.

@@ -13,6 +13,7 @@ public class Box extends Element {
 		this.color = color;
 	}
 	
+	//For absolute positioning:
 	public Box(int x, int y, int width, int height, Color color) {
 		super(x, y, width, height);
 		
