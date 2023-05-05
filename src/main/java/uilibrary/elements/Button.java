@@ -36,7 +36,7 @@ public class Button extends InteractableElement {
 	protected Color highlightedColor;
 	protected Color edgeColor = null;
 	
-	protected final int defaultTextPadding = 5; //TODO: now this is not used. Might want to use padding and let margin be the same as always, which would just move the whole area. Padding could be inside StringArrangement.
+	protected final int defaultTextPadding = 5;
 	
 	protected List<TextElement> texts = new ArrayList<>(); //List of texts that will be placed inside the button. First one will be the main text.
 	
