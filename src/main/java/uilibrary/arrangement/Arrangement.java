@@ -164,7 +164,15 @@ public class Arrangement implements HasLocation {
 		}
 	}
 	
-	public Alignment[] getAligns() {
+	public Reference getReference() {
+		return reference;
+	}
+	
+	public Alignments getAligns() {
+		return aligns;
+	}
+	
+	public Alignment[] getAlignsAsArray() {
 		return aligns.asArray();
 	}
 	

@@ -210,9 +210,7 @@ public class RenderMultilineText extends RenderText {
 	private static ArrayList<String> createAllLines(Graphics2D g, String[] texts, Font font, Rectangle bounds) {
 		ArrayList<String> lines = new ArrayList<>();
 		
-		for (int i = 0; i < texts.length; i++) {
-			String paragraph = texts[i];
-			
+		for (String paragraph : texts) {
 			lines.addAll(getLines(g, font, paragraph, bounds.width));
 		}
 		

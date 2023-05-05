@@ -29,7 +29,7 @@ public class RenderText {
 	}
 	
 	//MAIN function
-	public static Rectangle drawStringWithAlignment(Graphics2D g, String text, Rectangle rect, Font font, Alignment... aligns) {
+	public static Rectangle drawStringWithAlignment(Graphics2D g, String text, Rectangle rect, Font font, Alignment... aligns) { //TODO: make these take Alignments object instead or add other methods for it
 		font = checkIfFontIsNull(font);
 		
 		AffineTransform old = g.getTransform();
@@ -39,7 +39,7 @@ public class RenderText {
 		int width = metrics.stringWidth(text);
 		int height = getFontHeight(g, font);
 		int x = rect.x + (rect.width - width) / 2; //These are already centered
-		int y = rect.y + rect.height / 2 + height / 2;
+		int y = rect.y + (rect.height + height) / 2;
 		
 		for (Alignment align : aligns) {
 			switch (align) {

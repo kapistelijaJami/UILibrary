@@ -45,7 +45,7 @@ public abstract class Element implements HasBounds {
 		return arrangement.setReference(horizontal, horType, vertical, verType);
 	}
 	
-	//Another method to get Arrangement more semantically matching the situation better in some cases.
+	//Another method to get Arrangement which matches semantically better to the situation in some cases.
 	public Arrangement getArrangement() {
 		return arrangement;
 	}
@@ -76,6 +76,12 @@ public abstract class Element implements HasBounds {
 	}
 	
 	public void setHeight(int height) {
+		this.height = height;
+		arrangement.updateLocation(true); //Have to update location, it might depend on size. Must force update on other objects as well.
+	}
+	
+	public void setSize(int width, int height) {
+		this.width = width;
 		this.height = height;
 		arrangement.updateLocation(true); //Have to update location, it might depend on size. Must force update on other objects as well.
 	}

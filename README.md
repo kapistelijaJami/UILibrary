@@ -163,14 +163,15 @@ public class ExampleScene {
         //Gray box of size 120x120. It's aligned outside the green box, right hand side.
         //It will default to center vertically.
         //But it has a margin, that uses the 'w2' variable, which is the width of the reference. (Here green box width is 300)
-        //And it has a multiplier -0.5. So it will be positioned with the margin of -150.
+        //And it has a multiplier -0.5. So it will be positioned with the margin of -0.5 * 300 = -150.
         //This effectively puts it right side of the green box and moves it so the left side is at the center of the green box.
         //Same can be achieved for example with .setReference(greenBox, INSIDE).setMargin("0.5w", 0);
         Box grayBox = new Box(120, 120, Color.GRAY);
         grayBox.arrange().setReference(greenBox, OUTSIDE).align(RIGHT).setMargin("-0.5w2", 0);
         boxes.add(grayBox);
         
-        //Cyan box of size 50x50. Positioned relative to the gray box. It's placed inside with the margin ("0.5w", "0.5h").
+        //Cyan box of size 50x50. Positioned relative to the gray box.
+        //It's placed inside with the margin ("0.5w", "0.5h").
         //This places the top left corner to the middle of the gray box.
         Box cyanBox = new Box(50, 50, Color.CYAN);
         cyanBox.arrange().setReference(grayBox, INSIDE).setMargin("0.5w", "0.5h");

@@ -46,6 +46,22 @@ public class Alignments {
 		return first == align; //Can give a wrong answer when both are CENTER, but then the order doesn't matter anyway, both types are then INSIDE.
 	}
 	
+	public boolean firstIsHorizontal() {
+		return first == getHorizontal(); //Can give a wrong answer when both are CENTER, but then the order doesn't matter anyway, both types are then INSIDE.
+	}
+	
+	public boolean firstIsVertical() {
+		return first == getVertical(); //Can give a wrong answer when both are CENTER, but then the order doesn't matter anyway, both types are then INSIDE.
+	}
+	
+	public boolean secondIsHorizontal() {
+		return second == getHorizontal(); //Can give a wrong answer when both are CENTER, but then the order doesn't matter anyway, both types are then INSIDE.
+	}
+	
+	public boolean secondIsVertical() {
+		return second == getVertical(); //Can give a wrong answer when both are CENTER, but then the order doesn't matter anyway, both types are then INSIDE.
+	}
+	
 	public void replaceHorizontalAlign(Alignment align) {
 		if (first.isHorizontal()) {
 			first = align;

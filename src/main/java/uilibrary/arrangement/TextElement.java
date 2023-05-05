@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import static uilibrary.enums.Alignment.*;
 import uilibrary.util.RenderMultilineText;
 import uilibrary.util.RenderText;
 
@@ -14,6 +15,8 @@ public class TextElement extends Element {
 	private Color color;
 	private boolean multiline = false;
 	private boolean overflow = true;
+	private Padding padding = new Padding();
+	
 	private Font font;
 	public static Font defaultFont = new Font("Serif", Font.BOLD, 20);
 	
@@ -25,15 +28,15 @@ public class TextElement extends Element {
 	public TextElement(String text, Color color) {
 		this(text, 0, 0, color, defaultFont); //No size, will be single line. We'll calculate the size for one line.
 		
-		updateSize();
 		multiline = false;
+		updateSize();
 	}
 	
 	public TextElement(String text, Color color, Font font) {
 		this(text, 0, 0, color, font);
 		
-		updateSize();
 		multiline = false;
+		updateSize();
 	}
 	
 	public TextElement(String text, Dimension size, Color color) {
@@ -58,12 +61,23 @@ public class TextElement extends Element {
 		multiline = true;
 	}
 	
-	public void setFontSize(float size) {
+	public TextElement setFontSize(float size) {
 		font = font.deriveFont(size);
+		return this;
 	}
 	
-	public void setOverflow(boolean b) {
+	public TextElement setOverflow(boolean b) {
 		this.overflow = b;
+		return this;
+	}
+	
+	public TextElement setPadding(int x, int y) {
+		return setPadding(new Padding(x, y));
+	}
+	
+	public TextElement setPadding(Padding padding) {
+		this.padding = padding;
+		return this;
 	}
 	
 	@Override
@@ -72,17 +86,31 @@ public class TextElement extends Element {
 		Rectangle bounds = getBounds();
 		Arrangement arrangement = getArrangement();
 		if (multiline) {
-			//TODO: maybe add text padding and let margin be normal.
-			//Margin works differently in multiline StringArrangement.
-			//It shrinks the bounds the text will be fit inside,
-			//so that the margin is how much space there is between the edge,
-			//and you can just have the parent element as bounds.
-			Margin margin = arrangement.getMargin();
-			bounds.width -= margin.getX() * 2;
-			bounds.height -= margin.getY() * 2;
-			RenderMultilineText.drawMultilineText(g, text, bounds, font, overflow, arrangement.getAligns());
+			bounds.x += padding.x;
+			bounds.y += padding.y;
+			bounds.width -= padding.x * 2;
+			bounds.height -= padding.y * 2;
+			RenderMultilineText.drawMultilineText(g, text, bounds, font, overflow, arrangement.getAlignsAsArray());
 		} else {
-			RenderText.drawStringWithAlignment(g, text, bounds, font, arrangement.getAligns());
+			Alignments aligns = arrangement.getAligns();
+			
+			//When type is outside padding moves the text to the opposite direction
+			int horMult = arrangement.getReference().getTypeHorizontal(aligns).isInside() ? 1 : -1;
+			int verMult = arrangement.getReference().getTypeVertical(aligns).isInside() ? 1 : -1;
+			
+			if (aligns.getHorizontal() == LEFT) {
+				bounds.x += horMult * padding.x;
+			} else if (aligns.getHorizontal() == RIGHT) {
+				bounds.x -= horMult * padding.x;
+			}
+			
+			if (aligns.getVertical() == TOP) {
+				bounds.y += verMult * padding.y;
+			} else if (aligns.getVertical() == BOTTOM) {
+				bounds.y -= verMult * padding.y;
+			}
+			
+			RenderText.drawStringWithAlignment(g, text, bounds, font, aligns.asArray());
 		}
 	}
 	
@@ -95,36 +123,38 @@ public class TextElement extends Element {
 		return text;
 	}
 	
-	public void setText(String text) {
+	public TextElement setText(String text) {
 		this.text = text;
 		if (!multiline) {
 			updateSize();
 		}
+		return this;
 	}
 	
 	public Color getColor() {
 		return color;
 	}
 	
-	public void setColor(Color color) {
+	public TextElement setColor(Color color) {
 		this.color = color;
+		return this;
 	}
 	
 	public Font getFont() {
 		return font;
 	}
 	
-	public void setFont(Font font) {
+	public TextElement setFont(Font font) {
 		this.font = font;
 		if (!multiline) {
 			updateSize();
 		}
+		return this;
 	}
 	
-	public void setSize(int width, int height) { //TODO: make these type of changes update all the Arrangements.
-		this.width = width;
-		this.height = height;
-		
+	@Override
+	public void setSize(int width, int height) {
 		multiline = true;
+		super.setSize(width, height);
 	}
 }

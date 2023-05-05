@@ -36,7 +36,7 @@ public class Button extends InteractableElement {
 	protected Color highlightedColor;
 	protected Color edgeColor = null;
 	
-	protected int textPadding = 5; //TODO: now this is not used. Might want to use padding and let margin be the same as always, which would just move the whole area. Padding could be inside StringArrangement.
+	protected final int defaultTextPadding = 5; //TODO: now this is not used. Might want to use padding and let margin be the same as always, which would just move the whole area. Padding could be inside StringArrangement.
 	
 	protected List<TextElement> texts = new ArrayList<>(); //List of texts that will be placed inside the button. First one will be the main text.
 	
@@ -71,17 +71,19 @@ public class Button extends InteractableElement {
 		edgeColor = color;
 	}
 	
-	public void addStringArrangement(TextElement s) {
-		s.arrange(this, ReferenceType.INSIDE);
-		texts.add(s);
+	public void addTextElement(TextElement text) {
+		text.arrange(this, ReferenceType.INSIDE);
+		text.setPadding(defaultTextPadding, defaultTextPadding);
+		texts.add(text);
 	}
 	
-	public void setStringArrangement(TextElement s) {
-		s.arrange(this, ReferenceType.INSIDE);
+	public void setTextElement(TextElement text) {
+		text.arrange(this, ReferenceType.INSIDE);
+		text.setPadding(defaultTextPadding, defaultTextPadding);
 		if (texts.isEmpty()) {
-			texts.add(s);
+			texts.add(text);
 		} else {
-			texts.set(0, s);
+			texts.set(0, text);
 		}
 	}
 	

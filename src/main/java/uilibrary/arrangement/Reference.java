@@ -105,4 +105,14 @@ public class Reference {
 			return ReferenceType.INSIDE;
 		}
 	}
+	
+	public ReferenceType getTypeHorizontal(Alignments alignments) {
+		boolean isFirst = alignments.firstIsHorizontal();
+		return getTypeHorizontal(isFirst);
+	}
+	
+	public ReferenceType getTypeVertical(Alignments alignments) {
+		boolean isFirst = alignments.firstIsVertical();
+		return getTypeVertical(isFirst);
+	}
 }

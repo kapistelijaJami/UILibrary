@@ -60,7 +60,7 @@ public class ExampleScene {
 		
 		//Gray box of size 120x120. It's aligned outside the green box, right hand side. It will default to center vertically.
 		//But it has a margin, that uses the 'w2' variable, which is the width of the reference. (Here green box width is 300)
-		//And it has a multiplier -0.5. So it will be positioned with the margin of -150.
+		//And it has a multiplier -0.5. So it will be positioned with the margin of -0.5 * 300 = -150.
 		//This effectively puts it right side of the green box and moves it so the left side is at the center of the green box.
 		//Same can be achieved for example with .setReference(greenBox, INSIDE).setMargin("0.5w", 0);
 		Box grayBox = new Box(120, 120, Color.GRAY);
@@ -91,10 +91,11 @@ public class ExampleScene {
 		
 		
 		//This creates a text element and places it same way relative to the red box.
-		//It aligns the text bottom center, and has a vertical margin of 10px.
+		//It aligns the text bottom center, and has a vertical text padding of 10px.
 		//We did not provide this text element a size, which means it will be one line only, no matter how many characters.
 		TextElement redBoxText = new TextElement("Text inside red", Color.BLACK);
-		redBoxText.arrange().setReference(redBox).align(BOTTOM).setMargin(0, 10);
+		redBoxText.setPadding(0, 10);
+		redBoxText.arrange().setReference(redBox).align(BOTTOM);
 		texts.add(redBoxText);
 		
 		//Another text element (with font size of 15), but we provide a size this time. The size is the size of the orange box.
@@ -103,8 +104,8 @@ public class ExampleScene {
 		//It will fit inside the orange box, but will overflow from below if there are too many characters,
 		//unless you use setOverflow(false) -method to disable overflow, which won't render the rest that are outside of the bounds.
 		TextElement orangeBoxText = new TextElement("Text inside orange, that splits to multiple lines.", orangeBox.getSize(), Color.BLACK);
-		orangeBoxText.setFontSize(15);
-		orangeBoxText.arrange().setReference(orangeBox).align(TOP, LEFT).setMargin(5, 5);
+		orangeBoxText.setFontSize(15).setPadding(5, 5);
+		orangeBoxText.arrange().setReference(orangeBox).align(TOP, LEFT);
 		texts.add(orangeBoxText);
 	}
 	
