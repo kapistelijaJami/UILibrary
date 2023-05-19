@@ -55,7 +55,6 @@ public class Margin {
 		this.reference = reference;
 		
 		expressionX = new ExpressionBuilder(x).variables("w", "h", "w2", "h2").build();
-		
 		this.y = y;
 	}
 	
@@ -68,7 +67,6 @@ public class Margin {
 		this.reference = reference;
 		
 		expressionY = new ExpressionBuilder(y).variables("w", "h", "w2", "h2").build();
-		
 		this.x = x;
 	}
 	

@@ -5,13 +5,13 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import uilibrary.arrangement.AbsoluteReference;
-import uilibrary.arrangement.TextElement;
+import uilibrary.elements.TextElement;
 import static uilibrary.enums.Alignment.*;
 import static uilibrary.enums.ReferenceType.*;
 
 public class ExampleScene {
-	private List<Box> boxes = new ArrayList<>();
-	private List<TextElement> texts = new ArrayList<>();
+	private final List<Box> boxes = new ArrayList<>();
+	private final List<TextElement> texts = new ArrayList<>();
 	
 	public ExampleScene() {
 		//You can position elements very easily relative to each other however you want.
@@ -98,12 +98,13 @@ public class ExampleScene {
 		redBoxText.arrange().setReference(redBox).align(BOTTOM);
 		texts.add(redBoxText);
 		
-		//Another text element (with font size of 15), but we provide a size this time. The size is the size of the orange box.
+		//Another text element (with font size of 15), but we provide a size this time. The size is taken
+		//straight from the orange box, and it will change if the size of orange box changes.
 		//The text will be wrapped so that it fits inside this area. It's also placed relative to the orange box.
 		//Default ReferenceType is INSIDE, and it's aligned top left with a margin of 5 to both directions.
 		//It will fit inside the orange box, but will overflow from below if there are too many characters,
 		//unless you use setOverflow(false) -method to disable overflow, which won't render the rest that are outside of the bounds.
-		TextElement orangeBoxText = new TextElement("Text inside orange, that splits to multiple lines.", orangeBox.getSize(), Color.BLACK);
+		TextElement orangeBoxText = new TextElement("Text inside orange, that splits to multiple lines.", orangeBox, Color.BLACK);
 		orangeBoxText.setFontSize(15).setPadding(5, 5);
 		orangeBoxText.arrange().setReference(orangeBox).align(TOP, LEFT);
 		texts.add(orangeBoxText);

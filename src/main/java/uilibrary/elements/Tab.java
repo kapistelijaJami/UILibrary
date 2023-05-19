@@ -34,12 +34,12 @@ public class Tab extends Button {
 			g.setColor(selectedColor);
 			int thickness = 2;
 			g.setStroke(new BasicStroke(thickness));
-			g.drawRect(getX() + thickness / 2, getY() + thickness / 2, width - thickness, height - thickness);
+			g.drawRect(getX() + thickness / 2, getY() + thickness / 2, getWidth() - thickness, getHeight() - thickness);
 		} else if (edgeColor != null) {
 			g.setColor(edgeColor);
 			int thickness = 2;
 			g.setStroke(new BasicStroke(thickness));
-			g.drawRect(getX() + thickness / 2, getY() + thickness / 2, width - thickness, height - thickness);
+			g.drawRect(getX() + thickness / 2, getY() + thickness / 2, getWidth() - thickness, getHeight() - thickness);
 		}
 		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAntiAlias);

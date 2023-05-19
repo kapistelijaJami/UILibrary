@@ -5,9 +5,11 @@ import uilibrary.arrangement.Arrangement;
 import static uilibrary.enums.Alignment.*;
 import uilibrary.enums.ReferenceType;
 import uilibrary.interfaces.HasBounds;
+import uilibrary.interfaces.HasSize;
 
 public abstract class Element implements HasBounds {
-	protected int width, height;
+	private int width, height;
+	private HasSize hasSize; //If this is null, it uses width and height. Otherwise gets the size from getSize() method of HasSize object.
 	private final Arrangement arrangement;
 	
 	public Element(int width, int height) {
@@ -26,6 +28,16 @@ public abstract class Element implements HasBounds {
 	 */
 	public Element(int x, int y, int width, int height) {
 		this(width, height);
+		arrangement.setReference(x, y).align(TOP, LEFT);
+	}
+	
+	public Element(HasSize hasSize) {
+		this.hasSize = hasSize;
+		arrangement = new Arrangement(this);
+	}
+	
+	public Element(int x, int y, HasSize hasSize) {
+		this(hasSize);
 		arrangement.setReference(x, y).align(TOP, LEFT);
 	}
 	
@@ -62,27 +74,41 @@ public abstract class Element implements HasBounds {
 	
 	@Override
 	public int getWidth() {
+		if (hasSize != null) {
+			return hasSize.getWidth();
+		}
 		return width;
 	}
 	
 	@Override
 	public int getHeight() {
+		if (hasSize != null) {
+			return hasSize.getHeight();
+		}
 		return height;
 	}
 	
 	public void setWidth(int width) {
 		this.width = width;
+		hasSize = null;
 		arrangement.updateLocation(true); //Have to update location, it might depend on size. Must force update on other objects as well.
 	}
 	
 	public void setHeight(int height) {
 		this.height = height;
+		hasSize = null;
 		arrangement.updateLocation(true); //Have to update location, it might depend on size. Must force update on other objects as well.
 	}
 	
 	public void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
+		hasSize = null;
+		arrangement.updateLocation(true); //Have to update location, it might depend on size. Must force update on other objects as well.
+	}
+	
+	public void setSize(HasSize hasSize) {
+		this.hasSize = hasSize;
 		arrangement.updateLocation(true); //Have to update location, it might depend on size. Must force update on other objects as well.
 	}
 	

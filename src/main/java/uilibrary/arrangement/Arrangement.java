@@ -1,16 +1,17 @@
 package uilibrary.arrangement;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import uilibrary.enums.Alignment;
 import static uilibrary.enums.Alignment.*;
 import uilibrary.enums.ReferenceType;
 import uilibrary.interfaces.HasBounds;
-import uilibrary.interfaces.HasLocation;
 import uilibrary.interfaces.HasSize;
 import uilibrary.util.HelperFunctions;
+import uilibrary.interfaces.HasPosition;
 
-public class Arrangement implements HasLocation {
-	private static long LATEST_LOCATION_UPDATE; //This is the timestamp of when the latest update happened that changed their location. Any Arrangement with smaller latestUpdate will get updated.
+public class Arrangement implements HasPosition {
+	private static long LATEST_LOCATION_UPDATE; //This is the timestamp of when the latestLocation changed last for any Arrangement. Any Arrangement with smaller latestUpdate will get updated.
 	
 	private final Reference reference; //The reference we are positioning relative to
 	
@@ -18,7 +19,7 @@ public class Arrangement implements HasLocation {
 	private final Alignments aligns;
 	private final HasSize itself; //The object we are trying to position with this Arrangement
 	
-	private Location latestLocation; //The latest calculated location, so you don't have to calculate it every frame.
+	private Position latestLocation; //The latest calculated location, so you don't have to calculate it every frame.
 	private long latestUpdate; //If latestUpdate is less than LATEST_LOCATION_UPDATE, then the location will get updated.
 	
 	public Arrangement(HasSize itself) {
@@ -119,16 +120,16 @@ public class Arrangement implements HasLocation {
 	
 	@Override
 	public int getX() {
-		return getLocation().x;
+		return getPosition().x;
 	}
 	
 	@Override
 	public int getY() {
-		return getLocation().y;
+		return getPosition().y;
 	}
 	
 	@Override
-	public Location getLocation() {
+	public Position getPosition() {
 		if (latestLocation == null || latestUpdate < Arrangement.LATEST_LOCATION_UPDATE) {
 			updateLocation(false);
 		}
@@ -138,11 +139,11 @@ public class Arrangement implements HasLocation {
 	
 	/**
 	 * Updates the location of this object.
-	 * Will also set a timestamp if the location changed, so that other objects that were only
+	 * If the location changes, it will also set a timestamp, so that other objects that were only
 	 * updated before this timestamp will get updated as well, since they might reference this object.
 	 * 
 	 * If forceUpdateOthers is true, then others will be updated regardless. (This must be true when size changed,
-	 * because that might not change the location of this object, but could affect other objects regardless.)
+	 * because that might not change the location of this object, but could affect other objects anyway.)
 	 * @param forceUpdateOthers 
 	 */
 	public void updateLocation(boolean forceUpdateOthers) {
@@ -155,8 +156,8 @@ public class Arrangement implements HasLocation {
 		Alignment vertical = aligns.getVertical();
 		int yOffset = HelperFunctions.getYOffsetFromAlignment(yBounds.getSize(), itself.getHeight(), margin, vertical, reference.getTypeVertical(aligns.isFirst(vertical)));
 		
-		Location tempLoc = latestLocation;
-		latestLocation = new Location(xBounds.x + xOffset, yBounds.y + yOffset);
+		Position tempLoc = latestLocation;
+		latestLocation = new Position(xBounds.x + xOffset, yBounds.y + yOffset);
 		latestUpdate = System.nanoTime();
 		
 		if (tempLoc == null || forceUpdateOthers || !tempLoc.equals(latestLocation)) { //If the location changed, then we have to update other arrangements as well

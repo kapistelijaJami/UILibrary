@@ -1,14 +1,12 @@
 package uilibrary;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
@@ -27,6 +25,7 @@ import javax.swing.JPanel;
  * Add most of the listeners to the canvas. You can get the canvas object with getCanvas().
  * Added also focus method to focus on the canvas and bringing the window to front.
  * You can also get the InputMap and ActionMap objects to set keybindings with getInputMap() and getActionMap().
+ * You can also use the Canvas object as a Reference for other objects as well.
  */
 public class Window extends JFrame {
 	private Canvas canvas;

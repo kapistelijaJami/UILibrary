@@ -1,18 +1,18 @@
 package uilibrary.arrangement;
 
-public class Location {
+public class Position {
 	public int x;
 	public int y;
 	
-	public Location() {
+	public Position() {
         this(0, 0);
-    }
+	}
 	
-	public Location(Location loc) {
+	public Position(Position loc) {
         this(loc.x, loc.y);
     }
 	
-	public Location(int x, int y) {
+	public Position(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -36,7 +36,7 @@ public class Location {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final Location other = (Location) obj;
+		final Position other = (Position) obj;
 		if (this.x != other.x) {
 			return false;
 		}

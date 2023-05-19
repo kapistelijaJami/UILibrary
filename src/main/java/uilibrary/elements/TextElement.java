@@ -1,12 +1,15 @@
-package uilibrary.arrangement;
+package uilibrary.elements;
 
-import uilibrary.elements.Element;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import uilibrary.arrangement.Alignments;
+import uilibrary.arrangement.Arrangement;
+import uilibrary.arrangement.Padding;
 import static uilibrary.enums.Alignment.*;
+import uilibrary.interfaces.HasSize;
 import uilibrary.util.RenderMultilineText;
 import uilibrary.util.RenderText;
 
@@ -43,12 +46,26 @@ public class TextElement extends Element {
 		this(text, size.width, size.height, color, defaultFont);
 	}
 	
+	public TextElement(String text, HasSize hasSize, Color color) {
+		this(text, hasSize, color, defaultFont);
+	}
+	
 	public TextElement(String text, int width, int height, Color color) {
 		this(text, width, height, color, defaultFont);
 	}
 	
 	public TextElement(String text, Dimension size, Color color, Font font) {
 		this(text, size.width, size.height, color, font);
+	}
+	
+	public TextElement(String text, HasSize hasSize, Color color, Font font) {
+		super(hasSize);
+		
+		this.text = text;
+		this.color = color;
+		this.font = font;
+		
+		multiline = true;
 	}
 	
 	public TextElement(String text, int width, int height, Color color, Font font) {
@@ -115,8 +132,8 @@ public class TextElement extends Element {
 	}
 	
 	private void updateSize() {
-		width = RenderText.getStringWidth(font, text);
-		height = RenderText.getFontHeight(font);
+		setWidth(RenderText.getStringWidth(font, text));
+		setHeight(RenderText.getFontHeight(font));
 	}
 	
 	public String getText() {
@@ -156,5 +173,11 @@ public class TextElement extends Element {
 	public void setSize(int width, int height) {
 		multiline = true;
 		super.setSize(width, height);
+	}
+	
+	@Override
+	public void setSize(HasSize hasSize) {
+		multiline = true;
+		super.setSize(hasSize);
 	}
 }

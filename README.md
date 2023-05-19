@@ -1,5 +1,5 @@
 # UILibrary
-UILibrary is a UI library for java, where you can easily create windows, interactable UI elements and game loops to get your app up and running fast.
+UILibrary is a UI library for java, where you can easily create windows, interactable UI elements and game loops, and place elements easily to get your app up and running fast.
 
 You can place buttons, divide the window into panels, or align text however you want relative to some bounds, or automatically wrap the text to multiple lines inside the bounds. See Javadoc of Alignment enum for more information on how to use Alignments, and use TextElement to render and position text (see RenderText and RenderMultilineText on how the positioning works).
 
@@ -109,8 +109,8 @@ In this example we will render multiple Boxes that are positioned relative to ea
 
 ```Java
 public class ExampleScene {
-    private List<Box> boxes = new ArrayList<>();
-    private List<TextElement> texts = new ArrayList<>();
+    private final List<Box> boxes = new ArrayList<>();
+    private final List<TextElement> texts = new ArrayList<>();
     
     public ExampleScene() {
         //You can position elements very easily relative to each other however you want.
@@ -201,13 +201,13 @@ public class ExampleScene {
         redBoxText.arrange().setReference(redBox).align(BOTTOM).setMargin(0, 10);
         texts.add(redBoxText);
         
-        //Another text element (with font size of 15), but we provide a size this time. The size is from the orange box.
-        //The text will be wrapped so that it fits inside this area. It's also placed relative to the orange box.
+        //Another text element (with font size of 15), but we provide a size this time. The size is taken
+        //straight from the orange box, and it will change if the size of orange box changes.
         //Default ReferenceType is INSIDE, and it's aligned top left with a margin of 5 to both directions.
         //It will fit inside the orange box, but will overflow from below if there are too many characters,
         //unless you use setOverflow(false) -method to disable overflow, which won't render the rest
         //that are outside of the bounds.
-        TextElement orangeBoxText = new TextElement("Text inside orange, that splits to multiple lines.", orangeBox.getSize(), Color.BLACK);
+        TextElement orangeBoxText = new TextElement("Text inside orange, that splits to multiple lines.", orangeBox, Color.BLACK);
         orangeBoxText.setFontSize(15);
         orangeBoxText.arrange().setReference(orangeBox).align(TOP, LEFT).setMargin(5, 5);
         texts.add(orangeBoxText);

@@ -2,7 +2,7 @@ package uilibrary.interfaces;
 
 import java.awt.Rectangle;
 
-public interface HasBounds extends HasLocation, HasSize {
+public interface HasBounds extends HasPosition, HasSize {
 	public default Rectangle getBounds() {
 		return new Rectangle(getX(), getY(), getWidth(), getHeight());
 	}

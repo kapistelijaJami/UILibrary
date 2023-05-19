@@ -1,7 +1,7 @@
 package uilibrary.animation;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Animation {
 	private int frameCount;						// Counts updates for changing the frame
@@ -14,9 +14,9 @@ public class Animation {
 	private int slowedFrameDelay;				// At what point the frame delay have to cross in order for the animation to completely stop or stay there
 	private boolean slowDownFully;				// If true, the animation will completely stop after frameDelay crosses slowedFrameDelay. If false, frameDelay will stay there.
 	
-	private final ArrayList<BufferedImage> frames;    // Arraylist of frames
+	private final List<BufferedImage> frames;    // Arraylist of frames
 	
-	public Animation(ArrayList<BufferedImage> frames, int frameDelay) {
+	public Animation(List<BufferedImage> frames, int frameDelay) {
 		this.frames = frames;
 		this.frameDelay = frameDelay;
 
@@ -57,6 +57,10 @@ public class Animation {
 		this.slowDownFrameDelay = true;
 		this.slowDownFully = slowDownFully;
 		this.slowedFrameDelay = slowedFrameDelay;
+	}
+	
+	public void deactivateSlowDownFrameDelay() {
+		slowDownFrameDelay = false;
 	}
 	
 	public BufferedImage getCurrentFrameImage() {

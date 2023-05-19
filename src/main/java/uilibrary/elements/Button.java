@@ -1,7 +1,6 @@
 package uilibrary.elements;
 
 import uilibrary.util.HelperFunctions;
-import uilibrary.Window;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 import java.awt.BasicStroke;
 import java.awt.RenderingHints;
 import java.util.List;
-import uilibrary.arrangement.TextElement;
 import uilibrary.enums.ReferenceType;
 
 /*
@@ -94,16 +92,6 @@ public class Button extends InteractableElement {
 	public void setIsMouseOver(boolean isMouseOver) {
 		this.isMouseOver = isMouseOver;
 	}
-
-	@Override
-	public int getWidth() {
-		return width;
-	}
-
-	@Override
-	public int getHeight() {
-		return height;
-	}
 	
 	public void setHoverAction(Runnable action) {
 		this.hoverAction = action;
@@ -149,7 +137,8 @@ public class Button extends InteractableElement {
 	
 	/**
 	 * Clicks the button if x and y are inside it, and it is active.
-	 * If forceClick is true, it doesn't check for location.
+	 * If forceClick is true, it doesn't check for location,
+	 * but the button still has to be active.
 	 * @param x X location of the click.
 	 * @param y Y location of the click.
 	 * @param forceClick If true, it doesn't check for location.
@@ -188,13 +177,13 @@ public class Button extends InteractableElement {
 	private void renderBox(Graphics2D g, boolean highlighted, boolean inactive) {
 		if (inactive) {
 			g.setColor(Color.decode("#747474"));
-			g.fillRect(getX(), getY(), width, height);
+			g.fillRect(getX(), getY(), getWidth(), getHeight());
 		} else if (highlighted) {
 			g.setColor(highlightedColor);
-			g.fillRect(getX(), getY(), width, height);
+			g.fillRect(getX(), getY(), getWidth(), getHeight());
 		} else {
 			g.setColor(color);
-			g.fillRect(getX(), getY(), width, height);
+			g.fillRect(getX(), getY(), getWidth(), getHeight());
 		}
 		
 		renderEdge(g);
@@ -208,7 +197,7 @@ public class Button extends InteractableElement {
 			g.setColor(edgeColor);
 			int thickness = 2;
 			g.setStroke(new BasicStroke(thickness));
-			g.drawRect(getX() + thickness / 2, getY() + thickness / 2, width - thickness, height - thickness);
+			g.drawRect(getX() + thickness / 2, getY() + thickness / 2, getWidth() - thickness, getHeight() - thickness);
 			
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAntiAlias);
 		}

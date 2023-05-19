@@ -33,6 +33,7 @@ public class Example extends GameLoop {
 		//canvas.addMouseListener(yourMouseListener);
 		
 		exampleScene = new ExampleScene();
+		
 	}
 	
 	@Override

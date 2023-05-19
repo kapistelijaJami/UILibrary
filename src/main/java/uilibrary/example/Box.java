@@ -23,7 +23,7 @@ public class Box extends Element {
 	@Override
 	public void render(Graphics2D g) {
 		g.setColor(color);
-		g.fillRect(getX(), getY(), width, height);
+		g.fillRect(getX(), getY(), getWidth(), getHeight());
 	}
 	
 	public Color getColor() {
