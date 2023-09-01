@@ -23,7 +23,7 @@ public abstract class GameLoop implements Runnable {
 	
 	protected abstract void init();
 	protected abstract void update();
-	protected abstract void render();
+	protected abstract void render(); //TODO: I could send the Graphics2D object here already, but I would need a way to get the window object from here to get that.
 	
 	/**
 	 * Called every 250ms.
@@ -41,10 +41,17 @@ public abstract class GameLoop implements Runnable {
 		System.exit(0);
 	}
 	
+	/**
+	 * Start the game loop in a new thread.
+	 */
 	public void start() {
 		new Thread(this).start();
 	}
 	
+	/**
+	 * Start the game loop in a new thread and give the thread a name.
+	 * @param threadName
+	 */
 	public void start(String threadName) {
 		new Thread(this, threadName).start();
 	}

@@ -1,5 +1,6 @@
 package uilibrary.interfaces;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 
 public interface HasBounds extends HasPosition, HasSize {
@@ -9,5 +10,10 @@ public interface HasBounds extends HasPosition, HasSize {
 	
 	public default boolean isInside(int x, int y) {
 		return getBounds().contains(x, y);
+	}
+	
+	public default Point getCenter() {
+		Rectangle b = getBounds();
+		return new Point(b.x + b.width / 2, b.y + b.height / 2);
 	}
 }

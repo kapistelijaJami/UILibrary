@@ -10,7 +10,7 @@ import uilibrary.interfaces.HasSize;
 public abstract class Element implements HasBounds {
 	private int width, height;
 	private HasSize hasSize; //If this is null, it uses width and height. Otherwise gets the size from getSize() method of HasSize object.
-	private final Arrangement arrangement;
+	private Arrangement arrangement;
 	
 	public Element(int width, int height) {
 		this.width = width;
@@ -49,6 +49,10 @@ public abstract class Element implements HasBounds {
 		return arrangement.setReference(x, y);
 	}
 	
+	public Arrangement arrange(HasBounds reference) {
+		return arrangement.setReference(reference);
+	}
+	
 	public Arrangement arrange(HasBounds reference, ReferenceType type) {
 		return arrangement.setReference(reference, type);
 	}
@@ -60,6 +64,10 @@ public abstract class Element implements HasBounds {
 	//Another method to get Arrangement which matches semantically better to the situation in some cases.
 	public Arrangement getArrangement() {
 		return arrangement;
+	}
+	
+	public void setArrangement(Arrangement arrangement) {
+		this.arrangement = arrangement;
 	}
 	
 	@Override

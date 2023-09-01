@@ -103,6 +103,7 @@ public class TextElement extends Element {
 		Rectangle bounds = getBounds();
 		Arrangement arrangement = getArrangement();
 		if (multiline) {
+			//making the bounds smaller by padding
 			bounds.x += padding.x;
 			bounds.y += padding.y;
 			bounds.width -= padding.x * 2;

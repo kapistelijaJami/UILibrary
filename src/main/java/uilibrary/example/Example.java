@@ -2,11 +2,12 @@ package uilibrary.example;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import javax.swing.SwingUtilities;
 import uilibrary.GameLoop;
 import uilibrary.Window;
 
 public class Example extends GameLoop {
-	private Window window;
+	private final Window window;
 	private ExampleScene exampleScene;
 	private final String TITLE = "My Title";
 	
@@ -33,7 +34,6 @@ public class Example extends GameLoop {
 		//canvas.addMouseListener(yourMouseListener);
 		
 		exampleScene = new ExampleScene();
-		
 	}
 	
 	@Override

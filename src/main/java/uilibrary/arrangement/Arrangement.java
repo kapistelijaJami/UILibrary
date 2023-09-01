@@ -84,6 +84,10 @@ public class Arrangement implements HasPosition {
 		return this;
 	}
 	
+	public Arrangement setMargin(int both) {
+		return setMargin(both, both);
+	}
+	
 	public Arrangement setMargin(int x, int y) {
 		margin.setX(x);
 		margin.setY(y);
@@ -160,9 +164,20 @@ public class Arrangement implements HasPosition {
 		latestLocation = new Position(xBounds.x + xOffset, yBounds.y + yOffset);
 		latestUpdate = System.nanoTime();
 		
-		if (tempLoc == null || forceUpdateOthers || !tempLoc.equals(latestLocation)) { //If the location changed, then we have to update other arrangements as well
-			Arrangement.LATEST_LOCATION_UPDATE = latestUpdate;
+		if (forceUpdateOthers || latestLocation.equals(tempLoc)) { //If the location changed, then we have to update other arrangements as well
+			updateAllArrangements(latestUpdate);
 		}
+	}
+	
+	/**
+	 * Called if a location or size changed, so other arrangements would change with it.
+	 */
+	public static void updateAllArrangements() {
+		updateAllArrangements(System.nanoTime());
+	}
+	
+	public static void updateAllArrangements(long lastUpdate) {
+		Arrangement.LATEST_LOCATION_UPDATE = lastUpdate;
 	}
 	
 	public Reference getReference() {

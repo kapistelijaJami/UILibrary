@@ -86,7 +86,10 @@ public class HelperFunctions {
 					return reference.width + margin.getX();
 			}
 		}
-		return reference.width / 2 - width / 2 + margin.getX();
+		
+		//TODO: should this (and the one for y below) have margins? I think it's more intuitive that they dont, but then you can't offset centered objects.
+		//But then again, if it's centered, you can't really decide which way the margin should even offset the object, normally it depends on the align direction.
+		return reference.width / 2 - width / 2/* + margin.getX()*/;
 	}
 	
 	
@@ -120,6 +123,6 @@ public class HelperFunctions {
 					return reference.height + margin.getY();
 			}
 		}
-		return reference.height / 2 - height / 2 + margin.getY();
+		return reference.height / 2 - height / 2/* + margin.getY()*/;
 	}
 }

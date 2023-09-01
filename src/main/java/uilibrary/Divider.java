@@ -11,7 +11,7 @@ import uilibrary.util.HelperFunctions;
 
 //TODO: Tee tähän viel sillei, että pystyy pilkkoo useamminkin samaan suuntaan
 //TODO: Divider is Panel, because then you can put a divider to be one of the Panels inside another divider.
-//This could be changed so that dividers are just dividing another panel and not panels themselves,
+//This could be changed so that dividers are just dividing another panel and are not panels themselves,
 //but it would require current dividers to use an extra panel.
 public class Divider extends Panel {
 	private int value;			//actual vertical/horizontal distance from top/left

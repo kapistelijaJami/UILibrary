@@ -1,6 +1,7 @@
 package uilibrary.animation;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
@@ -21,6 +22,29 @@ public class ImageLoader {
 		}
 
 		return null;
+	}
+	
+	public static BufferedImage loadImage(String path, boolean absolutePath) {
+		try {
+			if (absolutePath) {
+				return ImageIO.read(new File(path));
+			} else {
+				return loadImage(path);
+			}
+		} catch (IOException e) {
+			System.out.println("IOException " + e + ", " + path);
+		}
+		
+		return null;
+	}
+	
+	public static void saveImage(BufferedImage img, String path, String ext) {
+		try {
+			File outputfile = new File(path);
+			ImageIO.write(img, ext, outputfile);
+		} catch (IOException e) {
+			System.out.println("IOException " + e + ", " + path);
+		}
 	}
 	
 	/**

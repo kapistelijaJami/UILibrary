@@ -206,12 +206,12 @@ public class Button extends InteractableElement {
 	private void renderTexts(Graphics2D g, boolean inactive) {
 		g.setColor(HelperFunctions.getDarkerColor(Color.decode("#747474"), 70));
 		
-		for (TextElement sa : texts) {
+		for (TextElement text : texts) {
 			if (!inactive) {
-				g.setColor(sa.getColor());
+				g.setColor(text.getColor());
 			}
 			
-			sa.render(g);
+			text.render(g);
 			
 			//RenderText.drawStringWithAlignment(g, sa.getText(), new Rectangle(getX() + textPadding, getY() + textPadding, width - textPadding * 2, height - textPadding * 2), sa.getFont(), sa.getAlign(), sa.getAlign2());
 		}

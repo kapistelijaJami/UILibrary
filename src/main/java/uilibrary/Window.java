@@ -1,6 +1,5 @@
 package uilibrary;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -10,6 +9,8 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
@@ -18,6 +19,7 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import uilibrary.arrangement.Arrangement;
 
 /**
  * Basic window with a canvas where you can draw with Graphics2D object.
@@ -32,6 +34,9 @@ public class Window extends JFrame {
 	private boolean fullscreen;
 	private JPanel keybindingPanel;
 	private Color background = Color.black;
+	private Runnable onClose;
+	private Runnable onMinimized;
+	private Runnable onUnminimized;
 	
 	public Window(int width, int height, String title) {
 		this(width, height, title, true, 0, false);
@@ -57,36 +62,36 @@ public class Window extends JFrame {
 	public Window(int width, int height, String title, boolean resizable, int spawnScreen, boolean fullscreen) {
 		super(title);
 		canvas = new Canvas();
-		canvas.setFocusTraversalKeysEnabled(false);				//disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
-		Toolkit.getDefaultToolkit().setDynamicLayout(false);	//resizaa componentit vasta kun ikkunan resize on valmis, ei vilku niin paljoa
+		canvas.setFocusTraversalKeysEnabled(false);				//Disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
+		Toolkit.getDefaultToolkit().setDynamicLayout(false);	//Resize components only after the window resize is ready, it doesn't flicker as much.
 		
-		canvas.setSize(width, height);		//laitetaan canvasin koko (ikkunan koko on vähän isompi, kun siinä on reunat) (setVisible ei saa olla setSize ja pack välissä)
-		super.setMinimumSize(new Dimension(256, 144));
+		//Set the canvas size based on width and height (the window itself is bit bigger, since it has borders) (setVisible cannot be between setSize and pack)
+		canvas.setSize(width, height);
+		super.setPreferredSize(new Dimension(width, height));	//For if canvas is removed for any reason, and packing happens again, the size of the window stays the same.
+		super.setMinimumSize(new Dimension(256, 144));			//Minimum size of the window
 		
 		setWindowCloseOperation();
 		
-		keybindingPanel = new JPanel();		//JPanel between the window and canvas so you can add keybindings to the panel since it's JComponent.
-        keybindingPanel.setLayout(new BorderLayout()); //Resets the layout so it doesn't take up its own space, thus doesn't affect the other layout at all.
-		keybindingPanel.add(canvas);
+		keybindingPanel = (JPanel) getContentPane();	//JPanel that's between the window and canvas so you can add keybindings to the panel since it's JComponent.
+		super.add(canvas);
 		
-		super.setResizable(resizable);		//voiko ikkunaa venyttää, oletus oli true
-		super.setLocationRelativeTo(null);	//ikkuna syntyy näytön keskelle
-		super.add(keybindingPanel);			//lisätään canvas ikkunaan
-		super.pack();						//pakkaa addatut tavarat ikkunaan, ja ikkunasta tulee siten oikean kokoinen ja tekee siitä displayable
+		super.setResizable(resizable);			//Can the window be resized, default is true
+		super.pack();							//Pack the added components inside the window, window will become correct size, and this makes it displayable.
+		super.setLocationRelativeTo(null);		//Window will spawn in the middle of the screen
 		
-		super.setVisible(true);				//laitetaan ikkuna näkyväksi
+		super.setVisible(true);					//Makes the window visible
 		
-		
+		addResizeListener();
 		
 		//FULLSCREEN STUFF
 		this.fullscreen = fullscreen;
 		if (fullscreen) {
-			//this might not resize everything if all the items are not fully initialized inside the window.
+			//This might not resize everything if all the items are not fully initialized inside the window.
 			//To quarantee it works, call setFullscreen later, or set width and height based on the screen size.
 			//(Might need to call setFullscreen(false) before calling setFullscreen(true))
 			setFullscreen(true, spawnScreen);
-			/*super.setExtendedState(JFrame.MAXIMIZED_BOTH);
-			super.setUndecorated(true);*/
+			//super.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			//super.setUndecorated(true);
 		} else {
 			setScreen(spawnScreen);
 		}
@@ -95,22 +100,31 @@ public class Window extends JFrame {
 	}
 	
 	private void setWindowCloseOperation() {
-		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//ikkuna sulkeutuu rastista
+		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	//Window and the whole application closes with X (default is HIDE_ON_CLOSE)
 		
-		super.addWindowListener(new WindowAdapter() {	//ikkunan voi laittaa sulkeutumaan rastista ja pystyy kutsua myös metodia
+		super.addWindowListener(new WindowAdapter() {	//Window can be set to close from X and can also call a method
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//closing
+				if (onClose != null) {
+					onClose.run();
+				}
 			}
 			
 			@Override
 			public void windowIconified(WindowEvent e) {
 				//minimized
+				if (onMinimized != null) {
+					onMinimized.run();
+				}
 			}
 			
 			@Override
 			public void windowDeiconified(WindowEvent e) {
 				//back from minimized
+				if (onUnminimized != null) {
+					onUnminimized.run();
+				}
 			}
 		});
 	}
@@ -125,6 +139,21 @@ public class Window extends JFrame {
 	
 	public int getCanvasHeight() {
 		return canvas.getHeight();
+	}
+	
+	public void removeCanvas() {
+		super.remove(canvas);
+		super.pack();
+	}
+	
+	public void addCanvas(Canvas canvas) {
+		this.canvas = canvas;
+		super.add(canvas);
+		super.pack();
+	}
+	
+	public void setCanvas(Canvas canvas) {
+		this.canvas = canvas;
 	}
 	
 	/**
@@ -217,8 +246,19 @@ public class Window extends JFrame {
 		focus();
 	}
 	
+	/**
+	 * This method will return Graphics2D object which is used to render in the window.
+	 * @return 
+	 */
 	public Graphics2D getGraphics2D() {
-		BufferStrategy bs = canvas.getBufferStrategy();
+		if (canvas == null) {
+			return null;
+		}
+		return getGraphics2D(canvas);
+	}
+	
+	public Graphics2D getGraphics2D(Canvas c) {
+		BufferStrategy bs = c.getBufferStrategy();
 		while (bs == null) {
 			canvas.createBufferStrategy(2);
 			bs = canvas.getBufferStrategy();
@@ -240,6 +280,10 @@ public class Window extends JFrame {
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR); //for image scaling to look sharp, might not be good for all images
 	}
 	
+	/**
+	 * Call this with the Graphics2D object to show the rendered graphics in the window.
+	 * @param g 
+	 */
 	public void display(Graphics2D g) {
 		g.dispose();
 		canvas.getBufferStrategy().show();
@@ -257,6 +301,31 @@ public class Window extends JFrame {
 	public final void focus() {
 		toFront();
 		getCanvas().requestFocus();
+	}
+	
+	public void setOnCloseFunction(Runnable runnable) {
+		this.onClose = runnable;
+	}
+	
+	public void setOnMinimizedFunction(Runnable runnable) {
+		this.onMinimized = runnable;
+	}
+	
+	public void setOnUnminimizedFunction(Runnable runnable) {
+		this.onUnminimized = runnable;
+	}
+	
+	/**
+	 * If other objects position relative to the canvas, this will correctly
+	 * change their locations when the window is resized.
+	 */
+	private void addResizeListener() {
+		super.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				Arrangement.updateAllArrangements();
+			}
+		});
 	}
 	
 	public InputMap getInputMap() {
