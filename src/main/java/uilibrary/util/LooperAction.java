@@ -25,7 +25,7 @@ public class LooperAction {
 	
 	/**
 	 * Creates a looper that counts up from start to end in each update, and then runs the action.
-	 * Both start and end is inclusive.
+	 * Both start and end are inclusive.
 	 * Create consumer with Lambda Expression: (o -> functionToCall())
 	 * or with method reference this::functionToCall (for non-static, also for specific object works) OR MyClass::functionToCall (for static)
 	 * @param action
@@ -34,8 +34,7 @@ public class LooperAction {
 	 */
 	public LooperAction(Consumer<Object> action, int start, int end) {
 		this.action = action;
-		boolean isActive = true;
-		this.counter = new Counter(start, end, isActive);
+		this.counter = new Counter(start, end, true);
 	}
 	
 	public void setInput(Object input) {

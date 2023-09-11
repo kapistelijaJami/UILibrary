@@ -72,7 +72,7 @@ public class RenderMultilineText extends RenderText {
 	 * @return Returns render area.
 	 */
 	public static Rectangle drawMultilineText(Graphics2D g, String[] texts, Rectangle bounds, Font font, boolean overflow, TextHorizontalAlign horizAlign, Alignment... aligns) {
-		font = checkIfFontIsNull(font);
+		font = defaultFontIfNull(font);
 		g.setFont(font);
 		
 		AffineTransform old = g.getTransform();
@@ -191,7 +191,7 @@ public class RenderMultilineText extends RenderText {
 	
 	public static Dimension getNeededSpace(Graphics2D g, String allTexts, Font font, Rectangle bounds) {
 		String[] texts = allTexts.split("\n", -1); //limit -1, so empty strings will be included
-		font = checkIfFontIsNull(font);
+		font = defaultFontIfNull(font);
 		g.setFont(font);
 		return getNeededSpace(g, createAllLines(g, texts, font, bounds), font, bounds);
 	}

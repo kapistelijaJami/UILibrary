@@ -45,7 +45,7 @@ public class Button extends InteractableElement {
 		this(width, height, color, null);
 	}
 	
-	public Button(int width, int height, Color color, Runnable action) {
+	public Button(int width, int height, Color color, Runnable action) { //TODO: make button growable based on the main text width
 		super(width, height);
 		this.color = color;
 		this.action = action;

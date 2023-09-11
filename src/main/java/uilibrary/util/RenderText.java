@@ -19,18 +19,19 @@ import uilibrary.Window;
 
 
 public class RenderText {
-	public static Font defaultFont = new Font("Serif", Font.BOLD, 25);
+	public static Font DEFAULT_FONT = new Font("Serif", Font.BOLD, 25);
+	public static Font DEFAULT_FONT2 = new Font("Arial", Font.BOLD, 20);
 	
-	protected static Font checkIfFontIsNull(Font font) {
+	protected static Font defaultFontIfNull(Font font) {
 		if (font == null) {
-			font = defaultFont;
+			font = DEFAULT_FONT;
 		}
 		return font;
 	}
 	
 	//MAIN function
 	public static Rectangle drawStringWithAlignment(Graphics2D g, String text, Rectangle rect, Font font, Alignment... aligns) { //TODO: make these take Alignments object instead or add other methods for it
-		font = checkIfFontIsNull(font);
+		font = defaultFontIfNull(font);
 		
 		AffineTransform old = g.getTransform();
 		g.setTransform(new AffineTransform()); //This is here to get the metrics correct while original AT is rotated.
@@ -71,7 +72,7 @@ public class RenderText {
 	public static void renderText(Graphics2D g, String text, int x, int y, Font font, Color textColor, Color outlineColor, double outlineSize) {
 		FontRenderContext frc = g.getFontRenderContext();
 		g.setColor(textColor);
-		font = checkIfFontIsNull(font);
+		font = defaultFontIfNull(font);
 		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
@@ -92,7 +93,7 @@ public class RenderText {
 	}
 	
 	public static void renderTextSpeed(Graphics2D g, String text, int x, int y, Font font, Color textColor, Color outlineColor, double outlineSize, int size) {
-		font = checkIfFontIsNull(font);
+		font = defaultFontIfNull(font);
 		
 		GlyphVector gv = font.createGlyphVector(g.getFontRenderContext(), text);
 		
@@ -145,7 +146,7 @@ public class RenderText {
 	
 	public static int getFontHeight(Graphics2D g, Font font) {
 		if (font == null) {
-			font = defaultFont;
+			font = DEFAULT_FONT;
 		}
 		FontMetrics metrics = g.getFontMetrics(font);
 		
@@ -158,7 +159,7 @@ public class RenderText {
 	
 	public static int getStringWidth(Graphics2D g, Font font, String text) {
 		if (font == null) {
-			font = defaultFont;
+			font = DEFAULT_FONT;
 		}
 		FontMetrics metrics = g.getFontMetrics(font);
 		
@@ -178,7 +179,7 @@ public class RenderText {
 	 */
 	public static int getFontLineInterval(Graphics2D g, Font font) {
 		if (font == null) {
-			font = defaultFont;
+			font = DEFAULT_FONT;
 		}
 		FontMetrics metrics = g.getFontMetrics(font);
 		

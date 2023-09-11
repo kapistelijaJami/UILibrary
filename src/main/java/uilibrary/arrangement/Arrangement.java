@@ -1,6 +1,5 @@
 package uilibrary.arrangement;
 
-import java.awt.Point;
 import java.awt.Rectangle;
 import uilibrary.enums.Alignment;
 import static uilibrary.enums.Alignment.*;
@@ -68,13 +67,7 @@ public class Arrangement implements HasPosition {
 			return align(CENTER, CENTER);
 		}
 		
-		if (align.isHorizontal()) {
-			aligns.replaceHorizontalAlign(align);
-		} else {
-			aligns.replaceVerticalAlign(align);
-		}
-		updateLocation(false);
-		return this;
+		return align(align, CENTER);
 	}
 	
 	public Arrangement align(Alignment first, Alignment second) {
@@ -85,7 +78,9 @@ public class Arrangement implements HasPosition {
 	}
 	
 	public Arrangement setMargin(int both) {
-		return setMargin(both, both);
+		margin.setBoth(both);
+		updateLocation(false);
+		return this;
 	}
 	
 	public Arrangement setMargin(int x, int y) {
@@ -164,7 +159,7 @@ public class Arrangement implements HasPosition {
 		latestLocation = new Position(xBounds.x + xOffset, yBounds.y + yOffset);
 		latestUpdate = System.nanoTime();
 		
-		if (forceUpdateOthers || latestLocation.equals(tempLoc)) { //If the location changed, then we have to update other arrangements as well
+		if (forceUpdateOthers || !latestLocation.equals(tempLoc)) { //If the location changed, then we have to update other arrangements as well
 			updateAllArrangements(latestUpdate);
 		}
 	}

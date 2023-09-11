@@ -85,4 +85,9 @@ public class Alignments {
 	public Alignment[] asArray() {
 		return new Alignment[] {first, second};
 	}
+	
+	public void clear() {
+		first = CENTER;
+		second = CENTER;
+	}
 }

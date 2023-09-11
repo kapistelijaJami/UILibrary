@@ -12,32 +12,56 @@ public abstract class Element implements HasBounds {
 	private HasSize hasSize; //If this is null, it uses width and height. Otherwise gets the size from getSize() method of HasSize object.
 	private Arrangement arrangement;
 	
-	public Element(int width, int height) {
-		this.width = width;
-		this.height = height;
+	public Element(int width, int height) { //For variable size width and height, just override getWidth() and getHeight() methods.
+		this(width, height, true);
+	}
+	
+	public Element(int width, int height, boolean alignCenter) {
+		this(0, 0, width, height);
 		
-		arrangement = new Arrangement(this);
+		if (alignCenter) {
+			arrangement.align(CENTER);
+		}
 	}
 	
 	/**
-	 * Places the object so that top left will touch the x and y coordinates by default.
+	 * Places the object relative the x and y coordinates.
+	 * Top left will touch the coordinates by default.
 	 * @param x
 	 * @param y
 	 * @param width
 	 * @param height 
 	 */
 	public Element(int x, int y, int width, int height) {
-		this(width, height);
+		this.width = width;
+		this.height = height;
+		arrangement = new Arrangement(this);
 		arrangement.setReference(x, y).align(TOP, LEFT);
 	}
 	
 	public Element(HasSize hasSize) {
-		this.hasSize = hasSize;
-		arrangement = new Arrangement(this);
+		this(hasSize, true);
 	}
 	
+	public Element(HasSize hasSize, boolean alignCenter) {
+		this(0, 0, hasSize);
+		
+		if (alignCenter) {
+			arrangement.align(CENTER);
+		}
+	}
+	
+	/**
+	 * Places the object relative the x and y coordinates.
+	 * Top left will touch the coordinates by default.
+	 * Element's size will always be taken from HasSize object, so they will stay synced.
+	 * @param x
+	 * @param y
+	 * @param hasSize 
+	 */
 	public Element(int x, int y, HasSize hasSize) {
-		this(hasSize);
+		this.hasSize = hasSize;
+		arrangement = new Arrangement(this);
 		arrangement.setReference(x, y).align(TOP, LEFT);
 	}
 	

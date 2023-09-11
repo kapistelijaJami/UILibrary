@@ -5,7 +5,7 @@ import uilibrary.enums.DividerOrientation;
 import uilibrary.enums.DividerOrientation.ScalingDirection;
 import uilibrary.interfaces.HasBounds;
 
-public abstract class Panel implements HasBounds { //TODO: create a panel that extends Element, but uses arrangement things to position itself. Same for divider.
+public abstract class Panel implements HasBounds { //TODO: create a panel that extends Element, and uses arrangement things to position itself. Same for divider.
 	protected int x, y;
 	protected int width, height;
 	

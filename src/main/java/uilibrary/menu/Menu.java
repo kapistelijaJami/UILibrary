@@ -5,12 +5,19 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import uilibrary.elements.Element;
+import uilibrary.interfaces.HasSize;
 
 public abstract class Menu extends Element {
 	protected Color backgroundColor;
 	protected boolean active = true;
 	protected Color edgeColor;
 	protected int edgeThickness = 2;
+	
+	public Menu(Color backgroundColor, HasSize size) {
+		super(size);
+		
+		this.backgroundColor = backgroundColor;
+	}
 	
 	public Menu(Color backgroundColor, int width, int height) {
 		super(width, height);

@@ -19,6 +19,8 @@ public class TextElement extends Element {
 	private boolean multiline = false;
 	private boolean overflow = true;
 	private Padding padding = new Padding();
+	private boolean visible = true;
+	private boolean fixedWidth = false;
 	
 	private Font font;
 	public static Font defaultFont = new Font("Serif", Font.BOLD, 20);
@@ -35,10 +37,22 @@ public class TextElement extends Element {
 		updateSize();
 	}
 	
+	public TextElement(String text, int width, Color color) {
+		this(text, width, color, defaultFont);
+	}
+	
 	public TextElement(String text, Color color, Font font) {
 		this(text, 0, 0, color, font);
 		
 		multiline = false;
+		updateSize();
+	}
+	
+	public TextElement(String text, int width, Color color, Font font) {
+		this(text, width, 0, color, font);
+		
+		this.multiline = false;
+		fixedWidth = true;
 		updateSize();
 	}
 	
@@ -97,8 +111,15 @@ public class TextElement extends Element {
 		return this;
 	}
 	
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	
 	@Override
 	public void render(Graphics2D g) {
+		if (!visible) {
+			return;
+		}
 		g.setColor(color);
 		Rectangle bounds = getBounds();
 		Arrangement arrangement = getArrangement();
@@ -133,7 +154,9 @@ public class TextElement extends Element {
 	}
 	
 	private void updateSize() {
-		setWidth(RenderText.getStringWidth(font, text));
+		if (!fixedWidth) {
+			setWidth(RenderText.getStringWidth(font, text));
+		}
 		setHeight(RenderText.getFontHeight(font));
 	}
 	

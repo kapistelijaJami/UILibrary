@@ -9,7 +9,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import uilibrary.util.HelperFunctions;
 
-//TODO: Tee tähän viel sillei, että pystyy pilkkoo useamminkin samaan suuntaan
+//TODO: Make it possible to split multiple times to the same direction.
 //TODO: Divider is Panel, because then you can put a divider to be one of the Panels inside another divider.
 //This could be changed so that dividers are just dividing another panel and are not panels themselves,
 //but it would require current dividers to use an extra panel.

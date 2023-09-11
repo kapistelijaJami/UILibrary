@@ -2,16 +2,26 @@ package uilibrary.menu;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import uilibrary.elements.Element;
-import uilibrary.elements.InteractableElement;
 import uilibrary.interfaces.Clickable;
+import uilibrary.interfaces.Draggable;
+import uilibrary.interfaces.Focusable;
+import uilibrary.interfaces.HasSize;
 import uilibrary.interfaces.Hoverable;
 import uilibrary.interfaces.Interactable;
+import uilibrary.interfaces.Typable;
+import uilibrary.interfaces.Updateable;
 
 public abstract class InteractableMenu extends Menu implements Interactable {
-	protected List<InteractableElement> interactableElements = new ArrayList<>();
+	protected List<Element> elements = new ArrayList<>();
+	
+	public InteractableMenu(Color backgroundColor, HasSize size) {
+		super(backgroundColor, size);
+	}
 	
 	public InteractableMenu(Color backgroundColor, int width, int height) {
 		super(backgroundColor, width, height);
@@ -27,9 +37,11 @@ public abstract class InteractableMenu extends Menu implements Interactable {
 			return false;
 		}
 		
-		for (Hoverable element : interactableElements) {
-			if (element.hover(x, y)) {
-				return true;
+		for (Element element : elements) {
+			if (element instanceof Hoverable) {
+				if (((Hoverable) element).hover(x, y)) {
+					return true;
+				}
 			}
 		}
 		
@@ -42,13 +54,33 @@ public abstract class InteractableMenu extends Menu implements Interactable {
 			return false;
 		}
 		
-		for (Clickable element : interactableElements) {
-			if (element.click(x, y)) {
-				return true;
+		resetFocuses(); //Every click resets focuses
+		
+		for (Element element : elements) {
+			if (element instanceof Clickable) {
+				if (((Clickable) element).click(x, y)) {
+					return true;
+				}
 			}
 		}
 		
 		return false;
+	}
+	
+	public void update() {
+		for (Element element : elements) {
+			if (element instanceof Updateable) {
+				((Updateable) element).update();
+			}
+		}
+	}
+	
+	private void resetFocuses() {
+		for (Element element : elements) {
+			if (element instanceof Focusable) {
+				((Focusable) element).unfocus();
+			}
+		}
 	}
 	
 	protected void renderElements(Graphics2D g) {
@@ -56,14 +88,49 @@ public abstract class InteractableMenu extends Menu implements Interactable {
 			return;
 		}
 		
-		for (Element element : interactableElements) {
+		for (Element element : elements) {
 			element.render(g);
 		}
 	}
 	
 	//TODO: see if you need resetSelected() and toggleElementSelection for resetting selected tab or button etc.
 	
-	public void addElement(InteractableElement element) {
-		interactableElements.add(element);
+	public void addElement(Element element) {
+		elements.add(element);
+	}
+	
+	public boolean keyTyped(KeyEvent e) {
+		for (Element element : elements) {
+			if (element instanceof Typable) {
+				Typable typable = (Typable) element;
+				if (typable.isFocused()) {
+					if (typable.keyTyped(e)) {
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public void mouseReleased() {
+		for (Element element : elements) {
+			if (element instanceof Draggable) {
+				((Draggable) element).mouseReleased();
+			}
+		}
+	}
+	
+	public boolean mouseDragged(int x, int y) {
+		for (Element element : elements) {
+			if (element instanceof Draggable) {
+				Draggable draggable = (Draggable) element;
+				if (draggable.isFocused() && draggable.mouseDragged(x, y)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

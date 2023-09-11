@@ -2,6 +2,7 @@ package uilibrary;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -33,21 +34,41 @@ public class Window extends JFrame {
 	private Canvas canvas;
 	private boolean fullscreen;
 	private JPanel keybindingPanel;
-	private Color background = Color.black;
 	private Runnable onClose;
 	private Runnable onMinimized;
 	private Runnable onUnminimized;
+	private Runnable onMaximized;
+	private Runnable onUnmaximized;
+	private Runnable onResized;
+	
+	private boolean unmaximizedEvent;
 	
 	public Window(int width, int height, String title) {
-		this(width, height, title, true, 0, false);
+		this(width, height, title, true, 0, false, true);
+	}
+	
+	public Window(int width, int height, boolean addCanvas, String title) {
+		this(width, height, title, true, 0, false, addCanvas);
 	}
 	
 	public Window(int width, int height, String title, boolean resizable) {
-		this(width, height, title, resizable, 0, false);
+		this(width, height, title, resizable, 0, false, true);
+	}
+	
+	public Window(int width, int height, String title, boolean resizable, boolean addCanvas) {
+		this(width, height, title, resizable, 0, false, addCanvas);
 	}
 	
 	public Window(int width, int height, String title, int spawnScreen, boolean fullscreen) {
-		this(width, height, title, true, spawnScreen, fullscreen);
+		this(width, height, title, true, spawnScreen, fullscreen, true);
+	}
+	
+	public Window(int width, int height, String title, int spawnScreen, boolean fullscreen, boolean addCanvas) {
+		this(width, height, title, true, spawnScreen, fullscreen, addCanvas);
+	}
+	
+	public Window(int width, int height, String title, boolean resizable, int spawnScreen, boolean fullscreen) {
+		this(width, height, title, resizable, spawnScreen, fullscreen, true);
 	}
 	
 	/**
@@ -58,22 +79,22 @@ public class Window extends JFrame {
 	 * @param resizable
 	 * @param spawnScreen Which screen/monitor to spawn the window. 0 is the default screen and 1 is the next etc.
 	 * @param fullscreen 
+	 * @param addCanvas 
 	 */
-	public Window(int width, int height, String title, boolean resizable, int spawnScreen, boolean fullscreen) {
+	public Window(int width, int height, String title, boolean resizable, int spawnScreen, boolean fullscreen, boolean addCanvas) {
 		super(title);
-		canvas = new Canvas();
-		canvas.setFocusTraversalKeysEnabled(false);				//Disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
 		Toolkit.getDefaultToolkit().setDynamicLayout(false);	//Resize components only after the window resize is ready, it doesn't flicker as much.
 		
-		//Set the canvas size based on width and height (the window itself is bit bigger, since it has borders) (setVisible cannot be between setSize and pack)
-		canvas.setSize(width, height);
 		super.setPreferredSize(new Dimension(width, height));	//For if canvas is removed for any reason, and packing happens again, the size of the window stays the same.
 		super.setMinimumSize(new Dimension(256, 144));			//Minimum size of the window
 		
 		setWindowCloseOperation();
 		
 		keybindingPanel = (JPanel) getContentPane();	//JPanel that's between the window and canvas so you can add keybindings to the panel since it's JComponent.
-		super.add(canvas);
+		
+		if (addCanvas) {
+			addDefaultCanvas();
+		}
 		
 		super.setResizable(resizable);			//Can the window be resized, default is true
 		super.pack();							//Pack the added components inside the window, window will become correct size, and this makes it displayable.
@@ -114,6 +135,7 @@ public class Window extends JFrame {
 			@Override
 			public void windowIconified(WindowEvent e) {
 				//minimized
+				System.out.println("minimized");
 				if (onMinimized != null) {
 					onMinimized.run();
 				}
@@ -122,11 +144,45 @@ public class Window extends JFrame {
 			@Override
 			public void windowDeiconified(WindowEvent e) {
 				//back from minimized
+				System.out.println("unminimized");
 				if (onUnminimized != null) {
 					onUnminimized.run();
 				}
 			}
 		});
+		
+		super.addWindowStateListener(new WindowAdapter() {
+			@Override
+			public void windowStateChanged(WindowEvent e) {
+				if (isFlagMaximized(e.getOldState()) && !isFlagMaximized(e.getNewState())) { //Back from maximized
+					unmaximizedEvent = true; //we run the function in componentResized, because it's after the event has passed (this is right before)
+				}
+			}
+		});
+		
+		super.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				if (isFlagMaximized(Window.this.getExtendedState())) { //Maximized
+					if (onMaximized != null) {
+						onMaximized.run();
+					}
+				} else if (unmaximizedEvent) { //Back from maximized
+					unmaximizedEvent = false;
+					if (onUnmaximized != null) {
+						onUnmaximized.run();
+					}
+				}
+				
+				if (onResized != null) { //TODO: do you always want to run this, or only when maximized functions weren't ran?
+					onResized.run();
+				}
+			}
+		});
+	}
+	
+	private boolean isFlagMaximized(int flag) {
+		return (flag & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH;
 	}
 	
 	public Canvas getCanvas() {
@@ -141,8 +197,20 @@ public class Window extends JFrame {
 		return canvas.getHeight();
 	}
 	
-	public void removeCanvas() {
+	public final void removeCanvas() {
 		super.remove(canvas);
+		super.pack();
+	}
+	
+	public final void addDefaultCanvas() {
+		canvas = new Canvas();
+		setCanvasBackground(Color.BLACK);
+		
+		//Set the canvas size based on width and height (the window itself is bit bigger, since it has borders) (setVisible cannot be between setSize and pack)
+		canvas.setSize(getWidth(), getHeight());
+		
+		canvas.setFocusTraversalKeysEnabled(false);	//Disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
+		super.add(canvas);
 		super.pack();
 	}
 	
@@ -160,8 +228,10 @@ public class Window extends JFrame {
 	 * Sets the background color for the canvas.
 	 * @param color 
 	 */
-	public void setCanvasBackground(Color color) {
-		background = color;
+	public final void setCanvasBackground(Color color) {
+		if (this.canvas != null) {
+			canvas.setBackground(color);
+		}
 	}
 	
 	/**
@@ -247,7 +317,7 @@ public class Window extends JFrame {
 	}
 	
 	/**
-	 * This method will return Graphics2D object which is used to render in the window.
+	 * This method will return Graphics2D object for the canvas which is used to render in the window.
 	 * @return 
 	 */
 	public Graphics2D getGraphics2D() {
@@ -257,18 +327,23 @@ public class Window extends JFrame {
 		return getGraphics2D(canvas);
 	}
 	
+	/**
+	 * You can call this method with your own canvas to get Graphics2D object from it.
+	 * @param c
+	 * @return 
+	 */
 	public Graphics2D getGraphics2D(Canvas c) {
 		BufferStrategy bs = c.getBufferStrategy();
 		while (bs == null) {
-			canvas.createBufferStrategy(2);
-			bs = canvas.getBufferStrategy();
+			c.createBufferStrategy(2);
+			bs = c.getBufferStrategy();
 		}
 		
 		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
 		setGraphicsRenderingHints(g);
 		
-		g.setColor(background);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		g.setColor(c.getBackground());
+		g.fillRect(0, 0, c.getWidth(), c.getHeight());
 		
 		return g;
 	}
@@ -285,8 +360,17 @@ public class Window extends JFrame {
 	 * @param g 
 	 */
 	public void display(Graphics2D g) {
+		display(g, canvas);
+	}
+	
+	/**
+	 * Call this with the Graphics2D object and the canvas to show the rendered graphics in the canvas.
+	 * @param g 
+	 * @param c 
+	 */
+	public void display(Graphics2D g, Canvas c) {
 		g.dispose();
-		canvas.getBufferStrategy().show();
+		c.getBufferStrategy().show();
 	}
 	
 	public boolean isFullscreen() {
@@ -300,19 +384,59 @@ public class Window extends JFrame {
 	 */
 	public final void focus() {
 		toFront();
-		getCanvas().requestFocus();
+		if (canvas != null) {
+			canvas.requestFocus();
+		} else {
+			requestFocus();
+		}
 	}
 	
-	public void setOnCloseFunction(Runnable runnable) {
+	/**
+	 * Sets a function which will be executed right before the window closes.
+	 * @param runnable 
+	 */
+	public void setOnClosingFunction(Runnable runnable) {
 		this.onClose = runnable;
 	}
 	
+	/**
+	 * Sets a function which will be executed when the window is minimized.
+	 * @param runnable 
+	 */
 	public void setOnMinimizedFunction(Runnable runnable) {
 		this.onMinimized = runnable;
 	}
 	
+	/**
+	 * Sets a function which will be executed when the window is back from minimized.
+	 * @param runnable 
+	 */
 	public void setOnUnminimizedFunction(Runnable runnable) {
 		this.onUnminimized = runnable;
+	}
+	
+	/**
+	 * Sets a function which will be executed when the window is maximized.
+	 * @param runnable 
+	 */
+	public void setOnMaximizedFunction(Runnable runnable) {
+		this.onMaximized = runnable;
+	}
+	
+	/**
+	 * Sets a function which will be executed when the window is back from maximized.
+	 * @param runnable 
+	 */
+	public void setOnUnmaximizedFunction(Runnable runnable) {
+		this.onUnmaximized = runnable;
+	}
+	
+	/**
+	 * Sets a function which will be executed when the window is resized.
+	 * @param runnable 
+	 */
+	public void setOnResizedFunction(Runnable runnable) {
+		this.onResized = runnable;
 	}
 	
 	/**

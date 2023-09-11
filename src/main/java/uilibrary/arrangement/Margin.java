@@ -1,5 +1,6 @@
 package uilibrary.arrangement;
 
+import java.awt.Rectangle;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import uilibrary.interfaces.HasSize;
@@ -12,12 +13,15 @@ public class Margin {
 	
 	private Expression expressionX, expressionY;
 	
+	private boolean useMarginForCenter = true; //If both margins were set with one value, you probably don't want to use margin for the direction you aligned CENTER
+	
 	public Margin() {
 		this(0, 0);
 	}
 	
 	public Margin(int both) {
 		this(both, both);
+		useMarginForCenter = false;
 	}
 	
 	public Margin(int x, int y) {
@@ -100,9 +104,20 @@ public class Margin {
 		return (int) expressionY.evaluate();
 	}
 	
+	public void setBoth(int both) {
+		this.x = both;
+		this.y = both;
+		expressionX = null;
+		expressionY = null;
+		
+		useMarginForCenter = false;
+	}
+	
 	public void setX(int x) {
 		this.x = x;
 		expressionX = null;
+		
+		useMarginForCenter = true;
 	}
 	
 	public void setX(String x, HasSize itself) {
@@ -119,6 +134,7 @@ public class Margin {
 	public void setY(int y) {
 		this.y = y;
 		expressionY = null;
+		useMarginForCenter = true;
 	}
 	
 	public void setY(String y, HasSize itself) {
@@ -130,5 +146,33 @@ public class Margin {
 		this.reference = reference;
 		
 		expressionY = new ExpressionBuilder(y).variables("w", "h", "w2", "h2").build();
+	}
+	
+	/**
+	 * If both margins were set with one value, you probably
+	 * don't want to use margin for the direction you aligned CENTER.
+	 * @return 
+	 */
+	public boolean useMarginForCenter() {
+		if (!useMarginForCenter) { //both were set using one value
+			if (expressionX != null && expressionY != null) { //both expressions are in use
+				return true;
+			}
+		}
+		return useMarginForCenter;
+	}
+	
+	public void shrinkRectWithMargin(Rectangle bounds) {
+		bounds.x += getX();
+		bounds.y += getY();
+		bounds.width -= getX() * 2;
+		bounds.height -= getY() * 2;
+	}
+	
+	public void widenRectWithMargin(Rectangle bounds) {
+		bounds.x -= getX();
+		bounds.y -= getY();
+		bounds.width += getX() * 2;
+		bounds.height += getY() * 2;
 	}
 }
