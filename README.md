@@ -133,7 +133,7 @@ public class ExampleScene {
         
         //White box of size 30x30. Even shorter way to specify the location.
         //Top left corner will be at point (60, 450).
-        Box whiteBox = new Box(30, 30, Color.RED);
+        Box whiteBox = new Box(30, 30, Color.WHITE);
         whiteBox.arrange(60, 450).align(TOP, LEFT);
         boxes.add(whiteBox);
         
@@ -227,4 +227,4 @@ public class ExampleScene {
 
 This is what the ExampleScene will look like:
 
-![ExampleScene](https://github.com/kapistelijaJami/UILibrary/blob/67c780c9652c4fca5c8c21656d04c4aefa573925/images/ExampleScene.png "ExampleScene")
+![ExampleScene](https://github.com/kapistelijaJami/UILibrary/blob/31c85ba51ff0c907cad317237236555be4194e54/images/ExampleScene.png "ExampleScene")
