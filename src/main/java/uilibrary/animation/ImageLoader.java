@@ -1,5 +1,7 @@
 package uilibrary.animation;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -164,4 +166,33 @@ public class ImageLoader {
 		}
 		return frames;
 	}
+	
+	/**
+	 * Resizes the image with a multiplier.
+	 * @param img
+	 * @param multiplier
+	 * @return 
+	 */
+	public static BufferedImage resizeImage(BufferedImage img, double multiplier) {
+		int newWidth = (int) (img.getWidth() * multiplier);
+		int newHeight = (int) (img.getHeight() * multiplier);
+        return resizeImage(img, newWidth, newHeight);
+    }
+	
+	/**
+	 * Resizes the image to specific dimensions.
+	 * @param img
+	 * @param newWidth
+	 * @param newHeight
+	 * @return 
+	 */
+	public static BufferedImage resizeImage(BufferedImage img, int newWidth, int newHeight) {
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, img.getType());
+        Graphics2D g = resizedImage.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		
+        g.drawImage(img, 0, 0, newWidth, newHeight, null);
+        g.dispose();
+        return resizedImage;
+    }
 }

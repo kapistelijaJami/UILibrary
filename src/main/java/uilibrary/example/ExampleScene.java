@@ -33,7 +33,7 @@ public class ExampleScene {
 		
 		//White box of size 30x30. Even shorter way to specify the location.
 		//Top left corner will be at point (60, 450).
-		Box whiteBox = new Box(30, 30, Color.RED);
+		Box whiteBox = new Box(30, 30, Color.WHITE);
 		whiteBox.arrange(60, 450).align(TOP, LEFT);
 		boxes.add(whiteBox);
 		

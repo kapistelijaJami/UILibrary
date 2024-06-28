@@ -294,6 +294,10 @@ public class Window extends JFrame {
 		super.setLocation(dx, dy);
 	}
 	
+	public final void toggleFullscreen() {
+		setFullscreen(!fullscreen, 0);
+	}
+	
 	public final void setFullscreen(boolean fullscreen) {
 		setFullscreen(fullscreen, 0);
 	}

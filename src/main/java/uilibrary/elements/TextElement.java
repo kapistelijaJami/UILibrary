@@ -94,6 +94,9 @@ public class TextElement extends Element {
 	
 	public TextElement setFontSize(float size) {
 		font = font.deriveFont(size);
+		if (!multiline) {
+			updateSize();
+		}
 		return this;
 	}
 	
