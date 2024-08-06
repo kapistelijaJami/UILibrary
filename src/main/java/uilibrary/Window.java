@@ -83,10 +83,13 @@ public class Window extends JFrame {
 	 */
 	public Window(int width, int height, String title, boolean resizable, int spawnScreen, boolean fullscreen, boolean addCanvas) {
 		super(title);
-		Toolkit.getDefaultToolkit().setDynamicLayout(false);	//Resize components only after the window resize is ready, it doesn't flicker as much.
+		Toolkit.getDefaultToolkit().setDynamicLayout(false);		//Resize components only after the window resize is ready, it doesn't flicker as much.
 		
-		super.setPreferredSize(new Dimension(width, height));	//For if canvas is removed for any reason, and packing happens again, the size of the window stays the same.
-		super.setMinimumSize(new Dimension(256, 144));			//Minimum size of the window
+		if (!addCanvas) {
+			super.setPreferredSize(new Dimension(width, height));	//If no canvas, then we need to set the size of the window.
+		}
+		super.setSize(new Dimension(width, height));				//For the canvas to just use these dimensions when/if we add it.
+		super.setMinimumSize(new Dimension(256, 144));				//Minimum size of the window
 		
 		setWindowCloseOperation();
 		
@@ -197,7 +200,7 @@ public class Window extends JFrame {
 		return canvas.getHeight();
 	}
 	
-	public final void removeCanvas() {
+	public final void removeCanvas() { //TODO: might need to resize the window here or set preferred size before pack.
 		super.remove(canvas);
 		super.pack();
 	}
@@ -207,7 +210,7 @@ public class Window extends JFrame {
 		setCanvasBackground(Color.BLACK);
 		
 		//Set the canvas size based on width and height (the window itself is bit bigger, since it has borders) (setVisible cannot be between setSize and pack)
-		canvas.setSize(getWidth(), getHeight());
+		canvas.setPreferredSize(new Dimension(getWidth(), getHeight()));
 		
 		canvas.setFocusTraversalKeysEnabled(false);	//Disables focus traversal with tab key, so it wont get consumed and keyListener can fire on it
 		super.add(canvas);
