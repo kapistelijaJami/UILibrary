@@ -1,5 +1,5 @@
 # UILibrary
-UILibrary is a UI library for java, where you can easily create windows, interactable UI elements and game loops, and place elements easily to get your app up and running fast.
+UILibrary is a UI library for java, where you can easily create windows, interactable UI elements and game loops, and place elements relative to anything easily to get your app up and running fast.
 
 You can place buttons, divide the window into panels, or align text however you want relative to some bounds, or automatically wrap the text to multiple lines inside the bounds. See Javadoc of Alignment enum for more information on how to use Alignments, and use TextElement to render and position text (see RenderText and RenderMultilineText on how the positioning works).
 
