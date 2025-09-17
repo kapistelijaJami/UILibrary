@@ -34,7 +34,7 @@ public class TextField extends InteractableElement implements Focusable, Updatea
 	private static final Font defaultFont = new Font("Serif", Font.BOLD, 30);
 	
 	public TextField(int width, int fps) { //No height, so no multiline
-		this(width, RenderMultilineText.getFontHeight(defaultFont) + 20, fps, false);
+		this(width, RenderText.getFontLineInterval(defaultFont) + 20, fps, false);
 	}
 	
 	public TextField(int width, int height, int fps, boolean multiLine) {

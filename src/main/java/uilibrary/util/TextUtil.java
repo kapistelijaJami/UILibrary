@@ -3,6 +3,7 @@ package uilibrary.util;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.Rectangle2D;
@@ -13,6 +14,8 @@ import java.awt.geom.Rectangle2D;
  * https://i.stack.imgur.com/crGOe.png
  */
 public class TextUtil {
+	private static final String allDefaultCharacters = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÅåÄäÖö0123456789";
+	
 	/**
 	 * Gets the FontMetrics used in the calculations.
 	 * @param font
@@ -151,5 +154,17 @@ public class TextUtil {
 		
 		int addedPixel = font.isBold() ? 1 : 0;
 		return (int) Math.ceil(aboveBaseline) + addedPixel;
+	}
+	
+	public static int getMaxHeightOfFont(Font font, Graphics2D g) {
+		int maxAscent = getMaxAscentOfSpecificString(allDefaultCharacters, font);
+		
+		return getLeading(getFontMetrics(font, g)) + maxAscent;
+	}
+	
+	public static int getFakeMaxHeightOfFont(Font font) {
+		int maxAscent = getMaxAscentOfSpecificString(allDefaultCharacters, font);
+		
+		return getLeading(getFakeFontMetrics(font)) + maxAscent;
 	}
 }

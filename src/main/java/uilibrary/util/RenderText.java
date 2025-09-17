@@ -29,7 +29,6 @@ public class RenderText {
 		return font;
 	}
 	
-	//TODO: Fixed width positioning with or without multiline doesn't work, especially with alignment bottom
 	//MAIN function
 	public static Rectangle drawStringWithAlignment(Graphics2D g, String text, Rectangle rect, Font font, Alignment... aligns) { //TODO: make these take Alignments object instead or add other methods for it
 		font = defaultFontIfNull(font);
@@ -39,25 +38,30 @@ public class RenderText {
 		
 		FontMetrics metrics = g.getFontMetrics(font);
 		int width = metrics.stringWidth(text);
-		int height = getFontHeight(g, font);
-		int x = rect.x + (rect.width - width) / 2; //These are already centered
-		int y = rect.y + (rect.height + height) / 2;
+		int height = getFontLineInterval(g, font);
+		int ascent = TextUtil.getAscent(metrics);
+		int descent = TextUtil.getDescent(metrics);
+		int leading = TextUtil.getLeading(metrics);
+		
+		//These are already centered
+		int x = rect.x + (rect.width - width) / 2;
+		int y = rect.y + (rect.height - height) / 2 + ascent;
 		
 		for (Alignment align : aligns) {
 			switch (align) {
 				case CENTER:
 					break;
 				case TOP:
-					y = rect.y + getFontHeight(g, font);
+					y = rect.y + ascent;
 					break;
 				case BOTTOM:
-					y = rect.y + rect.height;
+					y = rect.y + rect.height - descent - leading;
 					break;
 				case LEFT:
 					x = rect.x;
 					break;
 				case RIGHT:
-					x = rect.x + rect.width - metrics.stringWidth(text);
+					x = rect.x + rect.width - width;
 					break;
 			}
 		}
@@ -141,17 +145,20 @@ public class RenderText {
 		return im.getWidth();
 	}
 	
+	//These don't calculate it correctly. Use getFontLineInterval() instead.
+	@Deprecated
 	public static int getFontHeight(Font font) {
 		return getFontHeight(getFakeGraphics(), font);
 	}
 	
+	@Deprecated
 	public static int getFontHeight(Graphics2D g, Font font) {
 		if (font == null) {
 			font = DEFAULT_FONT;
 		}
 		FontMetrics metrics = g.getFontMetrics(font);
 		
-		return metrics.getAscent() - metrics.getDescent() - metrics.getLeading() * 2;
+		return metrics.getAscent() - metrics.getDescent() - metrics.getLeading() * 2; //This calculation doesn't make sense. Use getFontLineInterval() instead.
 	}
 	
 	public static int getStringWidth(Font font, String text) {

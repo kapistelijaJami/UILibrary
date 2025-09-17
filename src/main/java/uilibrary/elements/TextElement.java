@@ -35,6 +35,7 @@ public class TextElement extends Element {
 	
 	/**
 	 * If arrangement doesn't have a size, text will be single line, otherwise multiline inside the size.
+	 * Multiline needs width always and height if it wants to disable overflow or align BOTTOM.
 	 * @param text
 	 * @param color
 	 */
@@ -103,9 +104,7 @@ public class TextElement extends Element {
 	
 	public TextElement setFontSize(float size) {
 		font = font.deriveFont(size);
-		if (!multiline) {
-			updateSize();
-		}
+		updateSize();
 		return this;
 	}
 	
@@ -125,6 +124,7 @@ public class TextElement extends Element {
 	
 	public TextElement setMultiline(boolean multiline) {
 		this.multiline = multiline;
+		updateSize();
 		return this;
 	}
 	
@@ -145,7 +145,7 @@ public class TextElement extends Element {
 			//Making the bounds smaller by padding
 			bounds.x += padding.x;
 			bounds.y += padding.y;
-			bounds.width -= padding.x * 2;
+			bounds.width -= padding.x * 2; //TODO: not sure if paddings should change the bounds' width/height. Check especially the overflow.
 			bounds.height -= padding.y * 2;
 			RenderMultilineText.drawMultilineText(g, text, bounds, font, overflow, arrangement.getAlignsAsArray());
 		} else {
@@ -169,7 +169,7 @@ public class TextElement extends Element {
 			
 			//If not allowed to overflow, we will clip the area to render.
 			if (!overflow) {
-				g.setClip(bounds); //TODO: There's something wrong when clipping is on and the bounds are small, it doesn't render if it's barely below or something. Has to do with positioning bottom with fixed width.
+				g.setClip(bounds);
 			}
 			
 			RenderText.drawStringWithAlignment(g, text, bounds, font, aligns.asArray());
@@ -178,10 +178,14 @@ public class TextElement extends Element {
 	}
 	
 	private void updateSize() {
-		if (!fixedWidth) {
+		if (!fixedWidth && !multiline) {
 			setWidth(RenderText.getStringWidth(font, text));
 		}
-		setHeight(RenderText.getFontHeight(font));
+		if (!multiline) {
+			setHeight(RenderText.getFontLineInterval(font));
+		} else if (getHeight() == 0) { //If height was not set we set line height as default height
+			setDefaultHeight(RenderText.getFontLineInterval(font));
+		}
 	}
 	
 	public String getText() {
@@ -190,9 +194,7 @@ public class TextElement extends Element {
 	
 	public TextElement setText(String text) {
 		this.text = text;
-		if (!multiline) {
-			updateSize();
-		}
+		updateSize();
 		return this;
 	}
 	
@@ -211,9 +213,7 @@ public class TextElement extends Element {
 	
 	public TextElement setFont(Font font) {
 		this.font = font;
-		if (!multiline) {
-			updateSize();
-		}
+		updateSize();
 		return this;
 	}
 	

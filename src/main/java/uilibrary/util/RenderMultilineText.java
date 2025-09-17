@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import uilibrary.enums.ReferenceType;
-import uilibrary.util.HelperFunctions;
 import uilibrary.arrangement.Margin;
 
 /**
@@ -93,7 +92,7 @@ public class RenderMultilineText extends RenderText {
 		for (int i = 0; i < lines.size(); i++) {
 			String line = lines.get(i);
 			
-			if (!overflow && drawPosY > bounds.y + bounds.height) {
+			if (!overflow && drawPosY > bounds.y + bounds.height && i != 0) { //Line-specific clipping is overflow disabled. First line is always drawn.
 				break;
 			}
 			

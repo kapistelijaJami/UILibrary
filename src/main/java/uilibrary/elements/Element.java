@@ -132,6 +132,17 @@ public abstract class Element implements HasBounds {
 		arrangement.updateLocation(true); //Have to update location, it might depend on size. Must force update on other objects as well.
 	}
 	
+	/**
+	 * Only applies fixed height if hasSize is null.
+	 * @param height 
+	 */
+	public void setDefaultHeight(int height) {
+		if (hasSize == null) {
+			this.height = height;
+			arrangement.updateLocation(true); //Have to update location, it might depend on size. Must force update on other objects as well.
+		}
+	}
+	
 	public void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
