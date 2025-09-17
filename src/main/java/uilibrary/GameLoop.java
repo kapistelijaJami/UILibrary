@@ -86,6 +86,10 @@ public abstract class GameLoop implements Runnable {
 				if (this instanceof HasWindow) {
 					HasWindow windowed = (HasWindow) this;
 					Window window = windowed.getWindow();
+					if (window == null) {
+						continue;
+					}
+					
 					Graphics2D g = window.getGraphics2D();
 					windowed.render(g);
 					window.display(g);
