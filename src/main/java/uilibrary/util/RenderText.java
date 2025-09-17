@@ -29,6 +29,7 @@ public class RenderText {
 		return font;
 	}
 	
+	//TODO: Fixed width positioning with or without multiline doesn't work, especially with alignment bottom
 	//MAIN function
 	public static Rectangle drawStringWithAlignment(Graphics2D g, String text, Rectangle rect, Font font, Alignment... aligns) { //TODO: make these take Alignments object instead or add other methods for it
 		font = defaultFontIfNull(font);
@@ -199,6 +200,12 @@ public class RenderText {
 		return g;
 	}
 	
+	/**
+	 * Gets the FontMetrics without having the Graphics object.
+	 * Might not be exactly accurate, but probably good enough for most cases.
+	 * @param font
+	 * @return 
+	 */
 	public static FontMetrics getFakeFontMetrics(Font font) {
 		return getFakeGraphics().getFontMetrics(font);
 	}

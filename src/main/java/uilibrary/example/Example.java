@@ -2,11 +2,11 @@ package uilibrary.example;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import javax.swing.SwingUtilities;
 import uilibrary.GameLoop;
 import uilibrary.Window;
+import uilibrary.interfaces.HasWindow;
 
-public class Example extends GameLoop {
+public class Example extends GameLoop implements HasWindow {
 	private final Window window;
 	private ExampleScene exampleScene;
 	private final String TITLE = "My Title";
@@ -37,6 +37,11 @@ public class Example extends GameLoop {
 	}
 	
 	@Override
+	public Window getWindow() {
+		return window;
+	}
+	
+	@Override
 	protected void lazyUpdate(int fps) {
 		window.setTitle(TITLE + " - " + fps + " fps");
 	}
@@ -47,13 +52,25 @@ public class Example extends GameLoop {
 	}
 	
 	@Override
+	public void render(Graphics2D g) { //Render will be called after update
+		//Render graphics to the window with the provided Graphics2D
+		
+		exampleScene.render(g);
+		
+		//Graphics will be automatically displayed if HasWindow is implemented.
+	}
+	
+	
+	// This wont be called if the class implements HasWindow interface.
+	/*@Override
 	protected void render() { //Render will be called after update
 		Graphics2D g = window.getGraphics2D();
 		
-		//Render graphics to the window with g
+		//Render graphics to the window with Graphics2D
 		
 		exampleScene.render(g);
 		
 		window.display(g);
 	}
+	*/
 }

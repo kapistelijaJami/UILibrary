@@ -13,6 +13,14 @@ import uilibrary.interfaces.HasSize;
 import uilibrary.util.RenderMultilineText;
 import uilibrary.util.RenderText;
 
+//There could be three types of fixed width texts.
+//	1. Fixed width single line, overflow from the right.
+//  2. Fixed width single line, no overflow, so clip the text.
+//  3. Fixed width multiline.
+//Only one of them is implemented right now, need to allow all. Clipping from the right hasn't been done yet either.
+//-- Now made overflow and multiline setters.
+
+//TODO: Also add title so you can hover
 public class TextElement extends Element {
 	private String text;
 	private Color color;
@@ -51,7 +59,8 @@ public class TextElement extends Element {
 	public TextElement(String text, int width, Color color, Font font) {
 		this(text, width, 0, color, font);
 		
-		this.multiline = false;
+		//multiline = false; //TODO: If this is false, then the width doesn't really do anything, fixed width has positioning bugs too
+							 //TODO: Not sure what to do with vertical positioning if height is not given.
 		fixedWidth = true;
 		updateSize();
 	}
@@ -114,8 +123,14 @@ public class TextElement extends Element {
 		return this;
 	}
 	
-	public void setVisible(boolean visible) {
+	public TextElement setMultiline(boolean multiline) {
+		this.multiline = multiline;
+		return this;
+	}
+	
+	public TextElement setVisible(boolean visible) {
 		this.visible = visible;
+		return this;
 	}
 	
 	@Override
@@ -127,7 +142,7 @@ public class TextElement extends Element {
 		Rectangle bounds = getBounds();
 		Arrangement arrangement = getArrangement();
 		if (multiline) {
-			//making the bounds smaller by padding
+			//Making the bounds smaller by padding
 			bounds.x += padding.x;
 			bounds.y += padding.y;
 			bounds.width -= padding.x * 2;
@@ -152,7 +167,13 @@ public class TextElement extends Element {
 				bounds.y -= verMult * padding.y;
 			}
 			
+			//If not allowed to overflow, we will clip the area to render.
+			if (!overflow) {
+				g.setClip(bounds); //TODO: There's something wrong when clipping is on and the bounds are small, it doesn't render if it's barely below or something. Has to do with positioning bottom with fixed width.
+			}
+			
 			RenderText.drawStringWithAlignment(g, text, bounds, font, aligns.asArray());
+			g.setClip(null);
 		}
 	}
 	

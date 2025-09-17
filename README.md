@@ -24,7 +24,7 @@ import uilibrary.GameLoop;
 import uilibrary.Window;
 import java.awt.Graphics2D;
 
-public class Game extends GameLoop {
+public class Game extends GameLoop implements HasWindow {
     private Window window;
     
     public Game(int fps) {
@@ -47,6 +47,11 @@ public class Game extends GameLoop {
         //window.setTransferHandler(new DragAndDrop(this::openFile));
         //See Javadoc of DragAndDrop for more information.
     }
+	
+	@Override
+	public Window getWindow() {
+		return window;
+	}
     
     @Override
     protected void update() { //Update will be called 'fps' times per second
@@ -54,12 +59,11 @@ public class Game extends GameLoop {
     }
     
     @Override
-    protected void render() { //Render will be called after update
-        Graphics2D g = window.getGraphics2D();
+    public void render(Graphics2D g) { //Render will be called after update
+		
+        //Render graphics to the window with the provided Graphics2D
         
-        //Render graphics to the window with g
-        
-        window.display(g);
+        //Graphics will be automatically displayed if HasWindow is implemented.
     }
 }
 ```

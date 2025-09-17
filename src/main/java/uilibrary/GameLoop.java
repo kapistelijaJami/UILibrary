@@ -1,13 +1,17 @@
 package uilibrary;
 
+import java.awt.Graphics2D;
+import uilibrary.interfaces.HasWindow;
+
 /**
  * Game loop library for running update and render methods in a separate thread with specific fps.
  * <br>
  * <br>
  * USAGE:
- * Create a subclass that extends GameLoop.
+ * Create a subclass that extends GameLoop. If you want to render to a Window, also implement HasWindow interface.
+ * This will let the GameLoop call render(Graphics2D g) method with the Graphics2D object and dispose and display automatically.
  * Implement required methods. Update and render will be called back to back fps times a second.
- * Call start() for this object and you are good.
+ * Call start() for this object.
  * Override shutdown() to decide what to do when stopping the loop.
  * You can also override lazyUpdate(), which is called every 250ms, to maybe display fps
  * in title etc, or do something else which doesn't happen every update.
@@ -23,7 +27,8 @@ public abstract class GameLoop implements Runnable {
 	
 	protected abstract void init();
 	protected abstract void update();
-	protected abstract void render(); //TODO: I could send the Graphics2D object here already, but I would need a way to get the window object from here to get that.
+	
+	protected void render() {} //Not forcing the implementation, but it can be overridden and automatically called even if subclass doesn't implement HasWindow.
 	
 	/**
 	 * Called every 250ms.
@@ -78,7 +83,15 @@ public abstract class GameLoop implements Runnable {
 			if (infiniteFPS || now + nsBetweenFrames <= System.nanoTime()) {
 				now += nsBetweenFrames;
 				update();
-				render();
+				if (this instanceof HasWindow) {
+					HasWindow windowed = (HasWindow) this;
+					Window window = windowed.getWindow();
+					Graphics2D g = window.getGraphics2D();
+					windowed.render(g);
+					window.display(g);
+				} else {
+					render();
+				}
 				frames++;
 				
 				if (time + 250 < System.currentTimeMillis()) {
